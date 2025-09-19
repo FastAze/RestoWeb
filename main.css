@@ -697,3 +697,226 @@ nav a {
 .voir-commande-btn:hover {
     background-color: #e0e0e0;
 }
+
+/* Styles pour l'overlay de détail de commande */
+.voir-commande-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.voir-commande-overlay.active {
+    display: flex;
+}
+
+.voir-commande {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    max-width: 800px;
+    width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 101;
+}
+
+.voir-commande-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 2px solid #f0f0f0;
+    background: #fafafa;
+    border-radius: 16px 16px 0 0;
+}
+
+.voir-commande-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+    font-weight: bold;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.voir-commande-content {
+    padding: 32px;
+}
+
+.commande-info {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 8px 0;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    font-weight: 600;
+    color: #555;
+    font-size: 1em;
+}
+
+.value {
+    font-size: 1em;
+    color: #333;
+}
+
+.statut-badge {
+    background: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.commande-articles {
+    margin-bottom: 32px;
+}
+
+.commande-articles h3 {
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+.articles-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.article-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    gap: 16px;
+}
+
+.article-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+}
+
+.article-details {
+    flex: 1;
+}
+
+.article-nom {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.article-description {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.article-quantite-prix {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantite {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.prix-unitaire {
+    font-weight: 600;
+    color: #333;
+}
+
+.commande-total {
+    background: #f9f9f9;
+    padding: 24px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+}
+
+.total-ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 4px 0;
+}
+
+.total-ligne:last-child {
+    margin-bottom: 0;
+}
+
+.total-final {
+    border-top: 2px solid #333;
+    padding-top: 16px;
+    margin-top: 16px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.total-label {
+    color: #555;
+}
+
+.total-value {
+    font-weight: 600;
+    color: #333;
+}
+
+.total-final .total-label,
+.total-final .total-value {
+    color: #333;
+    font-weight: bold;
+}
