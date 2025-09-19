@@ -1,0 +1,9 @@
+UTILISATEUR(idUtilisateur (PK), loginUtil, emailUtil, mdpUtil)
+
+COMMANDE(idCommande (PK), dateHeureCom, totalTTC, typeCom, idEtat (FK), idUtilisateur (FK))
+
+ETAT(idEtat (PK), libEtat)
+
+LIGNEDECOMMANDE(idCommande (PK), idProduit (PK), quantite, totalHT)
+
+PRODUIT(idProduit (FK), libProduit, prixProduitHT)

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoWeb</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+        <nav>
+        <div class="nav-top">
+            <div class="logo"><a href="auccueil(connecte).html">RestoWeb</a></div>
+            <div class="pannier-notif">
+                <a class="pannier" href="pannier.html">Pannier</a>
+                <a><img src="image/notif.png" alt="notif"></a>
+            </div>
+        </div>
+        
+        <div class="bottom-nav">
+            <a class="logout" href="index.html">Déconnexion</a>
+            <a class="profile" href="profile.html">Nom d'utilisateur</a>
+        </div>
+    </nav>
+
+    <section class="notification">
+        <div class="notification-boite">
+            <p>Votre commande est en cours de route!</p>
+        </div>
+    </section>
+
+    <section class="sectionArticle" id="sectionArticle">
+        <div class="areaArticle">
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+            <div class="article">
+                <img src="image/pizza.jpg" alt="pizza">
+                <h3>500$</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-panier" id="sectionPanier" style="display: none;">
+        <div class="conteneur-panier">
+            <h2>Pannier</h2>
+            <div class="entete-panier">
+                <div class="nom-article">Nom de l'article</div>
+                <div class="prix-article">Prix</div>
+            </div>
+            <div class="articles-panier">
+                <div class="article-panier">
+                    <div class="details-article">Pizza</div>
+                    <div class="cout-article">500$</div>
+                </div>
+                <div class="article-panier">
+                    <div class="details-article">Pizza</div>
+                    <div class="cout-article">500$</div>
+                </div>
+                <div class="article-panier">
+                    <div class="details-article"></div>
+                    <div class="cout-article"></div>
+                </div>
+            </div>
+            <div class="options-panier">
+                <div class="bottom-options">
+                    <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
+                    <label><input type="checkbox"> Sur Place</label>
+                    <label><input type="checkbox"> À Emporter</label>
+                    <div class="total">Total : 1020$ (TTC)</div>
+                    <button class="bouton-valider">Valider</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-paiement" id="sectionPaiement" style="display: none;">
+        <div class="conteneur-paiement">
+            <h2>Paiement</h2>
+            <div class="formulaire-paiement">
+                <div class="champ-paiement">
+                    <label for="carte">Numéro de carte bancaire :</label>
+                    <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456">
+                </div>
+                <div class="champs-inline">
+                    <div class="champ-ccv">
+                        <label for="ccv">CCV :</label>
+                        <input type="text" id="ccv" name="ccv" maxlength="3">
+                    </div>
+                    <div class="champ-date">
+                        <label for="date">Date :</label>
+                        <input type="month" id="date" name="date">
+                    </div>
+                    <div class="montant">
+                        <span>Montant : 500$</span>
+                    </div>
+                </div>
+                <div class="boutons-paiement">
+                    <button class="bouton-annuler">Annuler</button>
+                    <button class="bouton-valider-paiement">Valider</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pop-up voir-article avec overlay, masquée par défaut -->
+    <div class="voir-article-overlay" id="voirArticleOverlay">
+        <section class="voir-article">
+            <div class="voir-article-img">
+                <img src="image/pizza2.png" alt="pizzamama">
+            </div>
+            <div class="voir-article-details">
+                <h2 class="voir-article-nom">Nom Article</h2>
+                <div class="voir-article-prix">Prix : 500$</div>
+                <div class="voir-article-btns">
+                    <input type="number" placeholder="0">
+                    <button class="valider-btn"><p>Valider</p></button>
+                    <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Masquer la notification au chargement et toggle au clic
+        const notifSection = document.querySelector('.notification');
+        const notifIcon = document.querySelector('.pannier-notif a img');
+        if (notifSection) {
+            notifSection.style.display = 'none';
+        }
+        if (notifIcon) {
+            notifIcon.parentElement.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (notifSection) {
+                    notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // Pop-up voir-article sur clic d'un article
+        const voirArticleOverlay = document.getElementById('voirArticleOverlay');
+        const closeVoirArticle = document.getElementById('closeVoirArticle');
+        const articles = document.querySelectorAll('.areaArticle .article');
+        
+        articles.forEach(function(article) {
+            article.addEventListener('click', function() {
+                if (voirArticleOverlay) {
+                    voirArticleOverlay.classList.add('active');
+                }
+            });
+        });
+        
+        if (closeVoirArticle && voirArticleOverlay) {
+            closeVoirArticle.addEventListener('click', function() {
+                voirArticleOverlay.classList.remove('active');
+            });
+        }
+
+        // Fonctions de navigation entre sections
+        function afficherSection(sectionAfficher, sectionsACacher) {
+            // Afficher la section demandée
+            const sectionAAfficher = document.getElementById(sectionAfficher) || document.querySelector('.' + sectionAfficher);
+            if (sectionAAfficher) {
+                sectionAAfficher.style.display = 'block';
+            }
+            
+            // Cacher toutes les autres sections
+            sectionsACacher.forEach(function(sectionId) {
+                const section = document.getElementById(sectionId) || document.querySelector('.' + sectionId);
+                if (section) {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        function afficherPaiement() {
+            afficherSection('sectionPaiement', ['sectionPanier', 'sectionArticle']);
+        }
+
+        function afficherPanier() {
+            afficherSection('sectionPanier', ['sectionArticle', 'sectionPaiement']);
+        }
+
+        function afficherArticles() {
+            afficherSection('sectionArticle', ['sectionPanier', 'sectionPaiement']);
+        }
+
+        // Événements pour les boutons
+        const boutonValiderPanier = document.querySelector('.bouton-valider');
+        if (boutonValiderPanier) {
+            boutonValiderPanier.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherPaiement();
+            });
+        }
+
+        const boutonValiderPaiement = document.querySelector('.bouton-valider-paiement');
+        if (boutonValiderPaiement) {
+            boutonValiderPaiement.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherArticles();
+            });
+        }
+
+        const boutonAnnulerPaiement = document.querySelector('.bouton-annuler');
+        if (boutonAnnulerPaiement) {
+            boutonAnnulerPaiement.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherArticles();
+            });
+        }
+
+        const boutonRetourPanier = document.querySelector('.bouton-retour');
+        if (boutonRetourPanier) {
+            boutonRetourPanier.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherArticles();
+            });
+        }
+
+        const lienPanier = document.querySelector('.pannier');
+        if (lienPanier) {
+            lienPanier.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherPanier();
+            });
+        }
+
+        const logoLien = document.querySelector('.logo a');
+        if (logoLien) {
+            logoLien.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherArticles();
+            });
+        }
+    });
+    </script>
+</body>
+</html>

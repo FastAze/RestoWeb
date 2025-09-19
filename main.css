@@ -1,0 +1,615 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+nav {
+    background-color: white;
+    padding: 20px;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+nav {
+    background-color: white;
+    padding: 20px;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+}
+
+.nav-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.pannier-notif {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pannier-notif .pannier {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.pannier-notif a img {
+    width: 20px;
+    height: 20px;
+    border: none;
+    margin: 0;
+}
+
+.nav-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 12px 15px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    display: block;
+    text-align: center;
+}
+
+.bottom-nav {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pannier {
+    margin-bottom: 20px;
+}
+
+.profile {
+    margin-top: auto;
+}
+.sectionArticle {
+    margin-left: 200px;
+    padding: 30px;
+    width: calc(100% - 200px);
+}
+
+.areaArticle {
+    background-color: white;
+    padding: 30px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.article {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.areaArticle img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.areaArticle h3 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.connecInscrip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.connection-container {
+    background-color: white;
+    border: 2px solid #333;
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.connection-container h2 {
+    margin: 0 0 30px 0;
+    font-size: 24px;
+    font-weight: normal;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.register-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.register-link p {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"] {
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto;
+}
+
+.form-group:last-of-type {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.form-group input[type="reset"] {
+    margin-right: 20px;
+}
+
+.form-group input[type="submit"] {
+    margin-left: 20px;
+}
+
+/* Styles pour la section panier */
+.section-panier {
+    margin-left: 200px;
+    padding: 30px;
+    width: calc(100% - 200px);
+}
+
+.conteneur-panier {
+    background-color: white;
+    padding: 30px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    position: relative;
+}
+
+.conteneur-panier h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.entete-panier {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 2px solid #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.articles-panier {
+    margin-bottom: 30px;
+}
+
+.article-panier {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.options-panier {
+    padding-top: 20px;
+    border-top: 2px solid #333;
+}
+
+.options-panier label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.bottom-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.bouton-valider {
+    padding: 12px 30px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.bouton-valider:hover {
+    background-color: #555;
+}
+
+/* Styles pour la section paiement */
+.section-paiement {
+    top: 0;
+    left: 200px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.conteneur-paiement {
+    background-color: white;
+    border: 2px solid #333;
+    padding: 40px;
+    width: 500px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.conteneur-paiement h2 {
+    margin: 0 0 30px 0;
+    font-size: 24px;
+    font-weight: normal;
+    color: #333;
+}
+
+.formulaire-paiement {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.champ-paiement {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.champ-paiement label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.champ-paiement input {
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.champs-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 15px;
+}
+
+.champ-ccv,
+.champ-date {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.champ-ccv {
+    width: 80px;
+}
+
+.champ-date {
+    width: 120px;
+}
+
+.champ-ccv label,
+.champ-date label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.champ-ccv input,
+.champ-date input {
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.montant {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-left: auto;
+}
+
+.boutons-paiement {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bouton-valider-paiement,
+.bouton-annuler {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.bouton-valider-paiement {
+    background-color: #333;
+    color: white;
+}
+
+.bouton-valider-paiement:hover {
+    background-color: #555;
+}
+
+.bouton-annuler {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #333;
+}
+
+.bouton-annuler:hover {
+    background-color: #e0e0e0;
+}
+
+.bouton-retour {
+    padding: 12px 20px;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.bouton-retour:hover {
+    background-color: #e0e0e0;
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 60px;
+    left: 220px;
+    z-index: 20;
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification-boite {
+    background: #ffffff;
+    color: #333;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 18px 24px;
+    font-size: 1.1em;
+    border: 2px solid #111;
+    min-width: 220px;
+    max-width: 90%;
+    transition: box-shadow 0.2s;
+}
+
+.notification-boite p {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Overlay pour la pop-up voir-article */
+.voir-article-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.25);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.voir-article-overlay.active {
+    display: flex;
+}
+
+/* Pop-up centrée */
+.voir-article {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 32px 48px;
+    max-width: 700px;
+    width: 95vw;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    z-index: 101;
+}
+
+.voir-article-img {
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    padding: 24px 0;
+}
+
+.voir-article-img img {
+    width: 90%;
+    max-width: 320px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #eee;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.voir-article-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 32px 24px;
+    background: #fff;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-sizing: border-box;
+}
+
+.voir-article-nom {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.voir-article-prix {
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.voir-article-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    align-items: center;
+}
+
+.valider-btn, .retour-btn {
+    background: #fff;
+    color: #333;
+    border: 2px solid #bbb;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: background 0.2s, border 0.2s;
+    width: 80%;
+    font-weight: 500;
+}
+
+.valider-btn:hover {
+    background: #ffb300;
+    color: #fff;
+    border-color: #ffb300;
+}
+
+.retour-btn:hover {
+    background: #eee;
+    border-color: #888;
+}
+
+.voir-article input[type="number"] {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    font-size: 1.1em;
+    width: 100px;
+    margin-bottom: 8px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.voir-article input[type="number"]:focus {
+    border-color: #ffb300;
+}
