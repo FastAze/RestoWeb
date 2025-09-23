@@ -67,7 +67,6 @@ nav {
 
 .pannier-notif .pannier {
     flex: 1;
-    margin-bottom: 0;
 }
 
 .pannier-notif a img {
@@ -75,6 +74,7 @@ nav {
     height: 20px;
     border: none;
     margin: 0;
+    display: block;
 }
 
 .nav-top {
@@ -103,20 +103,17 @@ nav a {
     text-align: center;
 }
 
-.bottom-nav {
-    margin-top: auto;
+.auth-buttons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.pannier {
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-top: auto;
 }
 
 .profile {
     margin-top: auto;
 }
+
 .sectionArticle {
     margin-left: 200px;
     padding: 30px;
