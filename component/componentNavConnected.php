@@ -38,7 +38,7 @@ if (isset($_SESSION['user_id'])) {
         
         <div class="auth-buttons">
             <a class="logout" href="?logout=1">Déconnexion</a>
-            <a class="profile" href="profile.html"><?php echo $username; ?></a>
+            <a class="profile" href="profile.html"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></a>
         </div>
     </nav>
 

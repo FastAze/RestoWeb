@@ -86,7 +86,7 @@
                         <div class="bat"></div>
                     </div>
                 </div>
-                <h2>(Nom d'utilisateur)</h2>
+                <h2><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></h2>
             </div>
             <div class="profile-content">
                 <table class="commandes-table">
