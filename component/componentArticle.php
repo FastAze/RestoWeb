@@ -14,12 +14,12 @@
         // Gestion des erreurs
         die("Erreur lors de la requête SQL : " . $ex->getMessage());
     }
-?>
 
-<?php foreach ($produits as $produit): ?>
-<div class="article">
-    <img src="image/pizza.jpg" alt="<?php echo htmlspecialchars($produit['libProduit']); ?>">
-    <h2><?php echo htmlspecialchars($produit['libProduit']); ?></h2>
-    <h3><?php echo htmlspecialchars($produit['prixProduitHT']); ?>€</h3>
-</div>
-<?php endforeach; ?>
+    foreach ($produits as $produit) {
+        echo '<div class="article">';
+        echo '<img src="image/pizza.jpg" alt="' . htmlspecialchars($produit['libProduit']) . '">';
+        echo '<h2>' . htmlspecialchars($produit['libProduit']) . '</h2>';
+        echo '<h3>' . htmlspecialchars($produit['prixProduitHT']) . '€</h3>';
+        echo '</div>';
+    }
+?>
