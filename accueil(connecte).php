@@ -7,27 +7,7 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-top">
-            <div class="logo"><a href="auccueil(connecte).html">RestoWeb</a></div>
-            <div class="pannier-notif">
-                <a class="pannier" href="pannier.html">Pannier</a>
-                <a><img src="image/notif.png" alt="notif"></a>
-            </div>
-        </div>
-        
-        <div class="auth-buttons">
-            <a class="logout" href="index.html">Déconnexion</a>
-            <a class="profile" href="profile.html">Nom d'utilisateur</a>
-        </div>
-    </nav>
-
-    <section class="notification">
-        <div class="notification-boite">
-            <p>Votre commande est en cours de route!</p>
-        </div>
-    </section>
-
+<?php include 'component/componentNavConnected.php'; ?>
     <section class="sectionArticle" id="sectionArticle">
         <div class="areaArticle">
             <div class="article">
