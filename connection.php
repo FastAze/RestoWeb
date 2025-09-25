@@ -70,8 +70,5 @@ session_start();
             </div>
         </div>
     </div>
-    <?php
-        include 'component/componentFooter.php';
-    ?>
 </body>
 </html>

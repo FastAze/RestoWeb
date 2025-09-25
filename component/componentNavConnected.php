@@ -27,5 +27,3 @@ if (isset($_GET['logout'])) {
             <p>Votre commande est en cours de route!</p>
         </div>
     </section>
-
-<?php include 'component/componentFooter.php'; ?>

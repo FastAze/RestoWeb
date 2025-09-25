@@ -12,10 +12,6 @@
                 include "component/componentArticle.php";
             ?>
         </div>
-        
-        <?php
-            include 'component/componentFooter.php';
-        ?>
     </section>
 
     <div class="voir-article-overlay" id="voirArticleOverlay">

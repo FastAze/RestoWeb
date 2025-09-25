@@ -8,6 +8,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
     justify-content: center;
+    display: flex;
     align-items: center;
     min-height: 100vh;
 }
@@ -34,13 +35,6 @@ nav {
 .logo {
     margin-bottom: 30px;
 }
-
-.footer {
-    margin-top: auto;
-    text-align: center;
-    margin-top: 20px;
-}
-
 
 .logo a {
     font-size: 24px;
