@@ -52,7 +52,7 @@ session_start();
                         $sth->bindParam(':password', $MDP_H);
                         
                         if ($sth->execute()) {
-                            header('Location: accueil_connecte.php'); // Changez vers un fichier PHP
+                            header('Location: accueilConnecte.php'); // Changez vers un fichier PHP
                             exit(); // Important : arrêter l'exécution après la redirection
                         } else {
                             echo "Erreur lors de l'inscription.";

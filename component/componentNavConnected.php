@@ -1,7 +1,7 @@
 
     <nav>
         <div class="nav-top">
-            <div class="logo"><a href="auccueil(connecte).html">RestoWeb</a></div>
+            <div class="logo"><a href="accueilConnecte.php">RestoWeb</a></div>
             <div class="pannier-notif">
                 <a class="pannier" href="pannier.html">Pannier</a>
                 <a><img src="image/notif.png" alt="notif"></a>

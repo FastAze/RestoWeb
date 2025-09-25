@@ -161,7 +161,7 @@
                 <div class="voir-article-prix">Prix : 15€</div>
                 <div class="voir-article-btns">
                     <input type="number" placeholder="1">
-                    <button class="valider-btn" onclick="window.location.href='auccueil(connecte).html'"><p>Valider</p></button>
+                    <button class="valider-btn" onclick="window.location.href='accueilConnecte.php'"><p>Valider</p></button>
                     <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
                 </div>
             </div>
