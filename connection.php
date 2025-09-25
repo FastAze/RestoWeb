@@ -24,7 +24,7 @@ session_start();
                     <input type="password" id="mdp" name="password" required>
                 </div>
                 <div class="form-group">
-                    <input type="button" value="Annuler" onclick="window.location.href='index.html'">
+                    <input type="button" value="Annuler" onclick="window.location.href='index.php'">
                     <input type="submit" value="Connexion" name="connexion">
                 </div>
             </form>
@@ -70,8 +70,8 @@ session_start();
             </div>
         </div>
     </div>
+    <?php
+        include 'component/componentFooter.php';
+    ?>
 </body>
 </html>
-<?php
-include 'template/footer.php';
-?>
