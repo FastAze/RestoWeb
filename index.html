@@ -68,21 +68,30 @@
     </div>
 
     <script>
+    // Ajouter un écouteur d'événement à chaque article pour ouvrir l'overlay
     document.querySelectorAll('.article').forEach(article => {
         article.addEventListener('click', function() {
+            // Récupérer l'overlay de visualisation d'article
             const overlay = document.getElementById('voirArticleOverlay');
+            
+            // Extraire les informations de l'article cliqué
             const imgSrc = this.querySelector('img').src;
             const nom = this.querySelector('h2').textContent;
             const prix = this.querySelector('h3').textContent;
 
+            // Mettre à jour le contenu de l'overlay avec les informations de l'article
             overlay.querySelector('.voir-article-img img').src = imgSrc;
             overlay.querySelector('.voir-article-nom').textContent = nom;
             overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
+            
+            // Afficher l'overlay
             overlay.style.display = 'flex';
         });
     });
 
+    // Ajouter un écouteur d'événement au bouton "Retour" pour fermer l'overlay
     document.getElementById('closeVoirArticle').addEventListener('click', function() {
+        // Masquer l'overlay
         document.getElementById('voirArticleOverlay').style.display = 'none';
     });
     </script>

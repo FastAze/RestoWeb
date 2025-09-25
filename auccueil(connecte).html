@@ -267,7 +267,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Masquer la notification au chargement et toggle au clic
+        // Masquer la notification au chargement et basculer l'affichage au clic
         const notifSection = document.querySelector('.notification');
         const notifIcon = document.querySelector('.pannier-notif a img');
         if (notifSection) {
@@ -282,11 +282,12 @@
             });
         }
 
-        // Pop-up voir-article sur clic d'un article
+        // Afficher la popup voir-article lorsqu'on clique sur un article
         const voirArticleOverlay = document.getElementById('voirArticleOverlay');
         const closeVoirArticle = document.getElementById('closeVoirArticle');
         const articles = document.querySelectorAll('.areaArticle .article');
         
+        // Ajouter un écouteur d'événement à chaque article
         articles.forEach(function(article) {
             article.addEventListener('click', function() {
                 if (voirArticleOverlay) {
@@ -295,13 +296,23 @@
             });
         });
         
+        // Fermer la popup voir-article
         if (closeVoirArticle && voirArticleOverlay) {
             closeVoirArticle.addEventListener('click', function() {
                 voirArticleOverlay.classList.remove('active');
             });
         }
 
-        // Fonctions de navigation entre sections
+        // Fermer la popup voir-article en cliquant en dehors
+        if (voirArticleOverlay) {
+            voirArticleOverlay.addEventListener('click', function(e) {
+                if (e.target === voirArticleOverlay) {
+                    voirArticleOverlay.classList.remove('active');
+                }
+            });
+        }
+
+        // Fonction pour afficher une section spécifique et cacher les autres
         function afficherSection(sectionAfficher, sectionsACacher) {
             // Afficher la section demandée
             const sectionAAfficher = document.getElementById(sectionAfficher) || document.querySelector('.' + sectionAfficher);
@@ -309,7 +320,7 @@
                 sectionAAfficher.style.display = 'block';
             }
             
-            // Cacher toutes les autres sections
+            // Cacher toutes les autres sections spécifiées
             sectionsACacher.forEach(function(sectionId) {
                 const section = document.getElementById(sectionId) || document.querySelector('.' + sectionId);
                 if (section) {
@@ -318,23 +329,27 @@
             });
         }
 
+        // Fonction pour afficher la section paiement
         function afficherPaiement() {
             afficherSection('sectionPaiement', ['sectionPanier', 'sectionArticle', 'sectionProfile']);
         }
 
+        // Fonction pour afficher la section panier
         function afficherPanier() {
             afficherSection('sectionPanier', ['sectionArticle', 'sectionPaiement', 'sectionProfile']);
         }
 
+        // Fonction pour afficher la section des articles
         function afficherArticles() {
             afficherSection('sectionArticle', ['sectionPanier', 'sectionPaiement', 'sectionProfile']);
         }
 
+        // Fonction pour afficher la section profil
         function afficherProfile() {
             afficherSection('sectionProfile', ['sectionPanier', 'sectionPaiement', 'sectionArticle']);
         }
 
-        // Événements pour les boutons
+        // Événement pour le bouton valider du panier - passer au paiement
         const boutonValiderPanier = document.querySelector('.bouton-valider');
         if (boutonValiderPanier) {
             boutonValiderPanier.addEventListener('click', function(e) {
@@ -343,6 +358,7 @@
             });
         }
 
+        // Événement pour le bouton valider du paiement - retourner aux articles
         const boutonValiderPaiement = document.querySelector('.bouton-valider-paiement');
         if (boutonValiderPaiement) {
             boutonValiderPaiement.addEventListener('click', function(e) {
@@ -351,6 +367,7 @@
             });
         }
 
+        // Événement pour le bouton annuler du paiement - retourner aux articles
         const boutonAnnulerPaiement = document.querySelector('.bouton-annuler');
         if (boutonAnnulerPaiement) {
             boutonAnnulerPaiement.addEventListener('click', function(e) {
@@ -359,6 +376,7 @@
             });
         }
 
+        // Événement pour le bouton retour du panier - retourner aux articles
         const boutonRetourPanier = document.querySelector('.bouton-retour');
         if (boutonRetourPanier) {
             boutonRetourPanier.addEventListener('click', function(e) {
@@ -367,6 +385,7 @@
             });
         }
 
+        // Événement pour le lien panier dans la navigation
         const lienPanier = document.querySelector('.pannier');
         if (lienPanier) {
             lienPanier.addEventListener('click', function(e) {
@@ -375,6 +394,7 @@
             });
         }
 
+        // Événement pour le logo - retourner aux articles
         const logoLien = document.querySelector('.logo a');
         if (logoLien) {
             logoLien.addEventListener('click', function(e) {
@@ -383,7 +403,7 @@
             });
         }
 
-        // Événement pour afficher le profile
+        // Événement pour afficher le profil utilisateur
         const lienProfile = document.querySelector('.profile');
         if (lienProfile) {
             lienProfile.addEventListener('click', function(e) {
@@ -392,29 +412,31 @@
             });
         }
 
-        // Gestion de l'overlay pour voir le détail d'une commande
+        // Gestion de la popup pour voir le détail d'une commande
         const voirCommandeOverlay = document.getElementById('voirCommandeOverlay');
         const closeVoirCommande = document.getElementById('closeVoirCommande');
         const voirCommandeBtns = document.querySelectorAll('.voir-commande-btn');
         
+        // Ajouter un écouteur à chaque bouton "Voir la commande"
         voirCommandeBtns.forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 // Ici, on pourrait récupérer les données spécifiques à la commande
-                // et les injecter dans l'overlay
+                // et les injecter dynamiquement dans la popup
                 if (voirCommandeOverlay) {
                     voirCommandeOverlay.classList.add('active');
                 }
             });
         });
         
+        // Fermer la popup voir-commande avec le bouton de fermeture
         if (closeVoirCommande && voirCommandeOverlay) {
             closeVoirCommande.addEventListener('click', function() {
                 voirCommandeOverlay.classList.remove('active');
             });
         }
 
-        // Fermer l'overlay en cliquant en dehors de la popup
+        // Fermer la popup voir-commande en cliquant en dehors de la popup
         if (voirCommandeOverlay) {
             voirCommandeOverlay.addEventListener('click', function(e) {
                 if (e.target === voirCommandeOverlay) {
