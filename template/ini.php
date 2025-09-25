@@ -2,7 +2,7 @@
     if (!function_exists('db_connect')) {
         function db_connect()
         {
-            $dsn = 'mysql:host=localhost;dbname=m2l';
+            $dsn = 'mysql:host=localhost;dbname=restoweb';
             $user = 'root';
             $password = '';
             try{
