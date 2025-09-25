@@ -1,0 +1,16 @@
+INSERT INTO `produit` (`idProduit`, `libProduit`, `prixProduitHT`) VALUES
+(1, 'Pizza Margherita', 8.50),
+(2, 'Pizza Quattro Stagioni', 12.00),
+(3, 'Pizza Pepperoni', 10.50),
+(4, 'Pizza Hawaienne', 11.00),
+(5, 'Pizza Calzone', 13.50),
+(6, 'Pizza Végétarienne', 11.50),
+(7, 'Pizza Quatre Fromages', 12.50),
+(8, 'Pizza Chorizo', 13.00),
+(9, 'Pizza Saumon Fumé', 15.00),
+(10, 'Pizza Bolognaise', 12.00),
+(11, 'Pizza Thon', 10.00),
+(12, 'Pizza Chèvre Miel', 13.50),
+(13, 'Pizza Orientale', 14.00),
+(14, 'Pizza Paysanne', 12.50),
+(15, 'Pizza Regina', 11.50);

@@ -1,52 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RestoWeb</title>
-    <link rel="stylesheet" href="main.css">
-</head>
+<?php
+    include "component/componentDocType.php";
+?>
 <body>
-    <nav>
-        <div class="logo"><a href="index.html">RestoWeb</a></div>
-        <div class="auth-buttons">
-            <div><a href="connection.html">Connection</a></div>
-            <div><a href="inscription.html">Inscription</a></div>
-        </div>
-    </nav>
+    <?php
+        include "component/componentNav.php";
+    ?>
 
     <section class="sectionArticle" id="sectionArticle">
         <div class="areaArticle">
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Margherita</h2>
-                <h3>15€</h3>
-            </div>
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Pepperoni</h2>
-                <h3>18€</h3>
-            </div>
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Quatre Fromages</h2>
-                <h3>20€</h3>
-            </div>
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Végétarienne</h2>
-                <h3>17€</h3>
-            </div>
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Hawaïenne</h2>
-                <h3>19€</h3>
-            </div>
-            <div class="article">
-                <img src="image/pizza.jpg" alt="pizza">
-                <h2>Pizza Calzone</h2>
-                <h3>22€</h3>
-            </div>
+            <?php
+                include "component/componentArticle.php";
+            ?>
         </div>
     </section>
 
