@@ -1,10 +1,30 @@
 <?php 
-// Vérifier si l'action de déconnexion est demandée
 if (isset($_GET['logout'])) {
     session_start();
     session_destroy();
     header("Location: index.php");
     exit();
+}
+
+session_start();
+include "template/ini.php";
+
+$username = "Nom d'utilisateur";
+
+if (isset($_SESSION['user_id'])) {
+    $dbh = db_connect();
+    $sql = "SELECT loginUtil FROM utilisateur WHERE idUtil = :user_id";
+    try {
+        $sth = $dbh->prepare($sql);
+        $sth->execute([':user_id' => $_SESSION['user_id']]);
+        
+        $user = $sth->fetch(PDO::FETCH_ASSOC);
+        if ($user) {
+            $username = htmlspecialchars($user['loginUtil']);
+        }
+    } catch (PDOException $ex) {
+        error_log("Erreur lors de la requête SQL : " . $ex->getMessage());
+    }
 }
 ?>
 <nav>
@@ -18,7 +38,7 @@ if (isset($_GET['logout'])) {
         
         <div class="auth-buttons">
             <a class="logout" href="?logout=1">Déconnexion</a>
-            <a class="profile" href="profile.html">Nom d'utilisateur</a>
+            <a class="profile" href="profile.html"><?php echo $username; ?></a>
         </div>
     </nav>
 

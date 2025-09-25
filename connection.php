@@ -51,7 +51,7 @@ session_start();
                             $_SESSION['username'] = $user['loginUtil'];
                             $_SESSION['logged_in'] = true;
                             
-                            header('Location: ²Connecte.php');
+                            header('Location: accueilConnecte.php');
                             exit();
                         } else {
                             echo "<p style='color: red;'>Nom d'utilisateur ou mot de passe incorrect.</p>";
