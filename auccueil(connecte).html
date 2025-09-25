@@ -68,27 +68,31 @@
             <h2>Pannier</h2>
             <div class="entete-panier">
                 <div class="nom-article">Nom de l'article</div>
+                <div class="quantite-article">Quantité</div>
                 <div class="prix-article">Prix</div>
             </div>
             <div class="articles-panier">
                 <div class="article-panier">
-                    <div class="details-article">Pizza</div>
-                    <div class="cout-article">15€</div>
+                    <div class="nom-article">Pizza Margherita</div>
+                    <div class="quantite-article">2</div>
+                    <div class="prix-article">15€</div>
                 </div>
                 <div class="article-panier">
-                    <div class="details-article">Pizza</div>
-                    <div class="cout-article">18€</div>
+                    <div class="nom-article">Pizza Pepperoni</div>
+                    <div class="quantite-article">1</div>
+                    <div class="prix-article">18€</div>
                 </div>
                 <div class="article-panier">
-                    <div class="details-article"></div>
-                    <div class="cout-article"></div>
+                    <div class="nom-article"></div>
+                    <div class="quantite-article"></div>
+                    <div class="prix-article"></div>
                 </div>
             </div>
             <div class="options-panier">
                 <div class="bottom-options">
                     <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
-                    <label><input type="checkbox"> Sur Place</label>
-                    <label><input type="checkbox"> À Emporter</label>
+                    <label><input type="radio" name="delivery-option" value="sur-place"> Sur Place</label>
+                    <label><input type="radio" name="delivery-option" value="a-emporter"> À Emporter</label>
                     <div class="total">Total : 52.80€ (TTC)</div>
                     <button class="bouton-valider">Valider</button>
                 </div>
