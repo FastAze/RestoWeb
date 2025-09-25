@@ -28,7 +28,7 @@ session_start();
                     <input type="password" id="mdp" name="password">
                 </div>
                 <div class="form-group">
-                    <input type="button" value="Annuler" onclick="window.location.href='index.html'">
+                    <input type="button" value="Annuler" onclick="window.location.href='index.php'">
                     <input type="submit" value="S'inscrire" name="inscrire">
                 </div>
             </form>
@@ -66,12 +66,12 @@ session_start();
             }
             ?>
             <div class="register-link">
-                <a href="connection.html">Vous avez déja un compte ?</a>
+                <a href="connection.php">Vous avez déja un compte ?</a>
             </div>
         </div>
     </div>
 </body>
 </html>
 <?php
-include 'template/footer.php';
+include 'component/componentFooter.php';
 ?>

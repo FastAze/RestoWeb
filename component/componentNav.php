@@ -1,7 +1,7 @@
 <nav>
-    <div class="logo"><a href="index.html">RestoWeb</a></div>
+    <div class="logo"><a href="index.php">RestoWeb</a></div>
     <div class="auth-buttons">
-        <div><a href="connection.html">Connection</a></div>
-        <div><a href="inscription.html">Inscription</a></div>
+        <div><a href="connection.php">Connection</a></div>
+        <div><a href="inscription.php">Inscription</a></div>
     </div>
 </nav>
