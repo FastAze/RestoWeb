@@ -22,8 +22,6 @@
         </section>
     </div>
 
-    
-
     <script>
         document.querySelectorAll('.article').forEach(article => {
             article.addEventListener('click', function() {
