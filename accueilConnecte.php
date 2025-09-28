@@ -13,203 +13,25 @@
         </div>
     </section>
 
-    <section class="section-panier" id="sectionPanier" style="display: none;">
-        <div class="conteneur-panier">
-            <h2>Pannier</h2>
-            <div class="entete-panier">
-                <div class="nom-article">Nom de l'article</div>
-                <div class="prix-article">Prix</div>
-            </div>
-            <div class="articles-panier">
-                <div class="article-panier">
-                    <div class="details-article">Pizza</div>
-                    <div class="cout-article">15€</div>
-                </div>
-                <div class="article-panier">
-                    <div class="details-article">Pizza</div>
-                    <div class="cout-article">18€</div>
-                </div>
-                <div class="article-panier">
-                    <div class="details-article"></div>
-                    <div class="cout-article"></div>
-                </div>
-            </div>
-            <div class="options-panier">
-                <div class="bottom-options">
-                    <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
-                    <label><input type="checkbox"> Sur Place</label>
-                    <label><input type="checkbox"> À Emporter</label>
-                    <div class="total">Total : 52.80€ (TTC)</div>
-                    <button class="bouton-valider">Valider</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php
+        include 'component/componentPanier.php';
+    ?>
 
-    <section class="section-paiement" id="sectionPaiement" style="display: none;">
-        <div class="conteneur-paiement">
-            <h2>Paiement</h2>
-            <div class="formulaire-paiement">
-                <div class="champ-paiement">
-                    <label for="carte">Numéro de carte bancaire :</label>
-                    <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456">
-                </div>
-                <div class="champs-inline">
-                    <div class="champ-ccv">
-                        <label for="ccv">CCV :</label>
-                        <input type="text" id="ccv" name="ccv" maxlength="3">
-                    </div>
-                    <div class="champ-date">
-                        <label for="date">Date :</label>
-                        <input type="text" id="date" name="date" placeholder="MM/AA" maxlength="5">
-                    </div>
-                    <div class="montant">
-                        <span>Montant : 52.80€</span>
-                    </div>
-                </div>
-                <div class="boutons-paiement">
-                    <button class="bouton-annuler">Annuler</button>
-                    <button class="bouton-valider-paiement">Valider</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php
+        include 'component/componentPaiement.php';
+    ?>
 
-    <section class="section-profile" id="sectionProfile" style="display: none;">
-        <div class="conteneur-profile">
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <div class="avatar-circle">
-                        <div class="bat"></div>
-                    </div>
-                </div>
-                <h2><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></h2>
-            </div>
-            <div class="profile-content">
-                <table class="commandes-table">
-                    <thead>
-                        <tr>
-                            <th>ID commande</th>
-                            <th>Voir le panier</th>
-                            <th>Prix (TTC)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>500500500</td>
-                            <td><button class="voir-commande-btn">Voir la commande</button></td>
-                            <td>52.80€</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <?php
+        include 'component/componentProfile.php';
+    ?>
 
-    <div class="voir-article-overlay" id="voirArticleOverlay">
-        <section class="voir-article">
-            <div class="voir-article-img">
-                <img src="image/pizza.jpg" alt="pizzamama">
-            </div>
-            <div class="voir-article-details">
-                <h2 class="voir-article-nom">Nom Article</h2>
-                <div class="voir-article-prix">Prix : 15€</div>
-                <div class="voir-article-btns">
-                    <input type="number" placeholder="1">
-                    <button class="valider-btn" onclick="window.location.href='accueilConnecte.php'"><p>Valider</p></button>
-                    <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
-                </div>
-            </div>
-        </section>
-    </div>
+    <?php
+        include 'component/componentVoirArticleOverlay.php';
+    ?>
 
-    <div class="voir-commande-overlay" id="voirCommandeOverlay">
-        <section class="voir-commande">
-            <div class="voir-commande-header">
-                <h2>Détail de la commande</h2>
-                <button id="closeVoirCommande" class="close-btn">✕</button>
-            </div>
-            <div class="voir-commande-content">
-                <div class="commande-info">
-                    <div class="info-row">
-                        <span class="label">N° de commande :</span>
-                        <span class="value" id="numeroCommande">500500500</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Date :</span>
-                        <span class="value" id="dateCommande">19/09/2025 - 14:30</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Statut :</span>
-                        <span class="value statut-badge" id="statutCommande">En livraison</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Type :</span>
-                        <span class="value" id="typeCommande">À emporter</span>
-                    </div>
-                </div>
-                
-                <div class="commande-articles">
-                    <h3>Articles commandés :</h3>
-                    <div class="articles-liste">
-                        <div class="article-item">
-                            <img src="image/pizza.jpg" alt="Pizza" class="article-img">
-                            <div class="article-details">
-                                <div class="article-nom">Pizza Margherita</div>
-                                <div class="article-description">Sauce tomate, mozzarella, basilic frais</div>
-                                <div class="article-quantite-prix">
-                                    <span class="quantite">Quantité: 2</span>
-                                    <span class="prix-unitaire">15€ × 2 = 30€</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="article-item">
-                            <img src="image/pizza.jpg" alt="Pizza" class="article-img">
-                            <div class="article-details">
-                                <div class="article-nom">Pizza Pepperoni</div>
-                                <div class="article-description">Sauce tomate, mozzarella, pepperoni</div>
-                                <div class="article-quantite-prix">
-                                    <span class="quantite">Quantité: 1</span>
-                                    <span class="prix-unitaire">18€ × 1 = 18€</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="commande-total">
-                    <div class="total-ligne">
-                        <span class="total-label">Sous-total :</span>
-                        <span class="total-value">48€</span>
-                    </div>
-                    <div class="total-ligne">
-                        <span class="total-label">TVA (10%) :</span>
-                        <span class="total-value">4.80€</span>
-                    </div>
-                    <div class="total-ligne total-final">
-                        <span class="total-label">Total TTC :</span>
-                        <span class="total-value">52.80€</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <?php
+        include 'component/componentVoirCommandeOverlay.php';
+    ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
