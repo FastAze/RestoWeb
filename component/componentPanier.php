@@ -22,8 +22,8 @@
         <div class="options-panier">
             <div class="bottom-options">
                 <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
-                <label><input type="checkbox"> Sur Place</label>
-                <label><input type="checkbox"> À Emporter</label>
+                <label><input type="radio" name="option-livreson"> Sur Place</label>
+                <label><input type="radio" name="option-livreson"> À Emporter</label>
                 <div class="total">Total : 52.80€ (TTC)</div>
                 <button class="bouton-valider">Valider</button>
             </div>
