@@ -34,6 +34,24 @@
     ?>
 
     <script>
+        document.querySelectorAll('.article').forEach(article => {
+            article.addEventListener('click', function() {
+                const overlay = document.getElementById('voirArticleOverlay');
+                const imgSrc = this.querySelector('img').src;
+                const nom = this.querySelector('h2').textContent;
+                const prix = this.querySelector('h3').textContent;
+
+                overlay.querySelector('.voir-article-img img').src = imgSrc;
+                overlay.querySelector('.voir-article-nom').textContent = nom;
+                overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
+                overlay.style.display = 'flex';
+            });
+        });
+
+        document.getElementById('closeVoirArticle').addEventListener('click', function() {
+            document.getElementById('voirArticleOverlay').style.display = 'none';
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Masquer la notification au chargement et toggle au clic
             const notifSection = document.querySelector('.notification');
@@ -47,25 +65,6 @@
                     if (notifSection) {
                         notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
                     }
-                });
-            }
-
-            // Pop-up voir-article sur clic d'un article
-            const voirArticleOverlay = document.getElementById('voirArticleOverlay');
-            const closeVoirArticle = document.getElementById('closeVoirArticle');
-            const articles = document.querySelectorAll('.areaArticle .article');
-            
-            articles.forEach(function(article) {
-                article.addEventListener('click', function() {
-                    if (voirArticleOverlay) {
-                        voirArticleOverlay.classList.add('active');
-                    }
-                });
-            });
-            
-            if (closeVoirArticle && voirArticleOverlay) {
-                closeVoirArticle.addEventListener('click', function() {
-                    voirArticleOverlay.classList.remove('active');
                 });
             }
 
