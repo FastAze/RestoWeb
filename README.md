@@ -1,6 +1,6 @@
-# RestOWeb 🍕
+# RestoWeb 🍕
 
-RestOWeb est une application web de restaurant permettant la commande en ligne de plats. Ce projet est développé en PHP avec une base de données MySQL.
+RestoWeb est une application web de restaurant permettant la commande en ligne de plats. Ce projet est développé en PHP avec une base de données MySQL.
 
 ## 📋 Prérequis
 
