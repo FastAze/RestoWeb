@@ -1,5 +1,6 @@
 <?php
     include "component/componentDocType.php";
+    session_start();
 ?>
 <body>
     <?php
