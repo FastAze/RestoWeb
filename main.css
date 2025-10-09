@@ -196,6 +196,46 @@ nav a {
     width: calc(100% - 200px);
 }
 
+/* Layout des lignes du panier */
+.section-panier .entete-panier,
+.section-panier .article-panier {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+}
+
+/* Quantité (avec et sans accent) */
+.section-panier .quantité-article,
+.section-panier .quantite-article {
+    text-align: center;
+    padding: 6px 8px;
+    min-width: 64px;
+    font-weight: 600;
+}
+
+/* Prix aligné à droite */
+.section-panier .prix-article,
+.section-panier .cout-article {
+    text-align: right;
+    padding-right: 8px;
+}
+
+/* Apparence des lignes */
+.section-panier .article-panier {
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .section-panier .entete-panier,
+    .section-panier .article-panier {
+        grid-template-columns: 1fr 80px 80px;
+    }
+}
+
 .conteneur-panier {
     background-color: white;
     padding: 30px;
