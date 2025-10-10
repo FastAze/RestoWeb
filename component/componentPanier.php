@@ -3,28 +3,50 @@
         <h2>Pannier</h2>
         <div class="entete-panier">
             <div class="nom-article">Nom de l'article</div>
+            <div class="quantité-article">Quantité</div>
             <div class="prix-article">Prix</div>
         </div>
         <div class="articles-panier">
-            <div class="article-panier">
-                <div class="details-article">Pizza</div>
-                <div class="cout-article">15€</div>
-            </div>
-            <div class="article-panier">
-                <div class="details-article">Pizza</div>
-                <div class="cout-article">18€</div>
-            </div>
-            <div class="article-panier">
-                <div class="details-article"></div>
-                <div class="cout-article"></div>
-            </div>
+            <?php
+
+            $dbh = db_connect();
+            $user = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; // Assurez-vous que la session est démarrée et que 'user_id' est défini
+
+            // Requête correcte : joindre lignedecommande -> produit via idProduit, et commander via idCommande
+            $sql = "SELECT p.libProduit, l.quantite, l.totalHT, c.totalTTC
+                    FROM lignedecommande l
+                    JOIN produit p ON l.idProduit = p.idProduit
+                    JOIN commande c ON c.idCommande = l.idCommande
+                    WHERE c.idUtilisateur = :utilisateur";
+
+            try {
+                    // Préparation et exécution de la requête avec paramètre lié
+                    $sth = $dbh->prepare($sql);
+                    $sth->execute([':utilisateur' => $user]);
+                    // Récupération de tous les résultats
+                    $panier = $sth->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $ex) {
+                // Gestion des erreurs
+                die("Erreur lors de la requête SQL : " . $ex->getMessage());
+            }
+
+            foreach ($panier as $panié) {    
+            echo '<div class="article-panier">';
+            echo '<div class="details-article">' . htmlspecialchars($panié['libProduit']) . '</div>';
+            echo '<div class="quantité-article">' . htmlspecialchars($panié['quantite']) . '</div>';
+            echo '<div class="cout-article">' . htmlspecialchars($panié['totalHT']) . '€</div>';
+            echo '</div>';
+                
+            }
+            
+            ?>
+
         </div>
         <div class="options-panier">
             <div class="bottom-options">
                 <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
                 <label><input type="radio" name="option-livreson"> Sur Place</label>
                 <label><input type="radio" name="option-livreson"> À Emporter</label>
-                <div class="total">Total : 52.80€ (TTC)</div>
                 <button class="bouton-valider">Valider</button>
             </div>
         </div>
