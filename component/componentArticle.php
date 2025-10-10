@@ -16,7 +16,7 @@
     }
 
     foreach ($produits as $produit) {
-        echo '<div class="article">';
+        echo '<div class="article" data-id="' . $produit['idProduit'] . '">';
         echo '<img src="image/pizza.jpg" alt="' . htmlspecialchars($produit['libProduit']) . '">';
         echo '<h2>' . htmlspecialchars($produit['libProduit']) . '</h2>';
         echo '<h3>' . htmlspecialchars($produit['prixProduitHT']) . '€</h3>';

@@ -1,6 +1,13 @@
 <?php
     include "component/componentDocType.php";
+    include 'template/ini.php';
+    include 'template/chekEtat.php';
     session_start();
+    
+    // Vérifier si l'utilisateur est connecté et a une commande active
+    if (isset($_SESSION['user_id'])) {
+        verifierEtatCommande($_SESSION['user_id']);
+    }
 ?>
 <body>
     <?php
@@ -41,10 +48,12 @@
                 const imgSrc = this.querySelector('img').src;
                 const nom = this.querySelector('h2').textContent;
                 const prix = this.querySelector('h3').textContent;
+                const idProduit = this.getAttribute('data-id'); // Récupérer l'ID du produit
 
                 overlay.querySelector('.voir-article-img img').src = imgSrc;
                 overlay.querySelector('.voir-article-nom').textContent = nom;
                 overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
+                overlay.querySelector('#produitId').value = idProduit; // Définir l'ID dans le champ caché
                 overlay.style.display = 'flex';
             });
         });

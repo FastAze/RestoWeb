@@ -1,5 +1,6 @@
 <?php
     include 'template/ini.php';
+    include 'template/chekEtat.php';
     session_start();
     include "component/componentDocType.php";
 ?>
@@ -44,8 +45,17 @@
                                 $_SESSION['username'] = $user['loginUtil'];
                                 $_SESSION['logged_in'] = true;
                                 
-                                header('Location: accueilConnecte.php');
-                                exit();
+                                // Vérifier l'état des commandes de l'utilisateur
+                                // Si aucune commande n'existe, en créer une automatiquement
+                                if (verifierEtatCommande($user['idUtilisateur'])) {
+                                    // Redirection vers la page d'accueil connecté
+                                    header('Location: accueilConnecte.php');
+                                    exit();
+                                } else {
+                                    echo "<p style='color: orange;'>Connexion réussie, mais erreur lors de la vérification des commandes.</p>";
+                                    header('Location: accueilConnecte.php');
+                                    exit();
+                                }
                             } else {
                                 echo "<p style='color: red;'>Nom d'utilisateur ou mot de passe incorrect.</p>";
                             }

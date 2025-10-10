@@ -5,19 +5,62 @@
     
     // Traitement de l'ajout de produit
     if ($_POST && isset($_POST['action']) && $_POST['action'] === 'ajouter_produit') {
+        // Ajouter du débogage
+        error_log("POST reçu: " . print_r($_POST, true));
+        
         $idProduit = (int)$_POST['idProduit'];
         $quantite = (int)$_POST['quantite'];
+        
+        error_log("ID Produit: $idProduit, Quantité: $quantite");
+        
+        // Vérifier si idProduit est valide
+        if ($idProduit <= 0) {
+            echo 'ID produit invalide: ' . $idProduit;
+            exit;
+        }
         
         // Vérifier si l'utilisateur est connecté
         if (!isset($_SESSION['user_id'])) {
             echo 'Utilisateur non connecté';
+            exit;
         }
         
         $idUtilisateur = $_SESSION['user_id'];
         
         try {
-            $sqlInsert = "INSERT INTO lignedecommande (idCommande, idProduit, quantite, totalHT) VALUES (NULL, :idProduit, :quantite, NULL)";
+            // Vérifier si le produit existe et récupérer ses informations
+            $sqlProduit = "SELECT idProduit, libProduit FROM produit WHERE idProduit = :idProduit";
+            $sthProduit = $dbh->prepare($sqlProduit);
+            $sthProduit->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
+            $sthProduit->execute();
+            $produitExiste = $sthProduit->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$produitExiste) {
+                echo 'Produit non trouvé. ID recherché: ' . $idProduit;
+                exit;
+            }
+            
+            // Chercher une commande existante avec l'état "initialisée" pour cet utilisateur
+            $sqlCommande = "SELECT idCommande FROM commande WHERE idUtilisateur = :idUtilisateur AND idEtat = 1";
+            $sthCommande = $dbh->prepare($sqlCommande);
+            $sthCommande->bindParam(':idUtilisateur', $idUtilisateur);
+            $sthCommande->execute();
+            $commande = $sthCommande->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$commande) {
+                // Créer une nouvelle commande si aucune n'existe
+                $sqlNewCommande = "INSERT INTO commande (dateHeureCom, totalTTC, typeCom, idEtat, idUtilisateur) VALUES (NOW(), 0, 0, 1, :idUtilisateur)";
+                $sthNewCommande = $dbh->prepare($sqlNewCommande);
+                $sthNewCommande->bindParam(':idUtilisateur', $idUtilisateur);
+                $sthNewCommande->execute();
+                $idCommande = $dbh->lastInsertId();
+            } else {
+                $idCommande = $commande['idCommande'];
+            }
+            
+            $sqlInsert = "INSERT INTO lignedecommande (idCommande, idProduit, quantite) VALUES (:idCommande, :idProduit, :quantite)";
             $sthInsert = $dbh->prepare($sqlInsert);
+            $sthInsert->bindParam(':idCommande', $idCommande);
             $sthInsert->bindParam(':idProduit', $idProduit);
             $sthInsert->bindParam(':quantite', $quantite);
             
@@ -27,7 +70,7 @@
                 echo 'Erreur lors de l\'ajout du produit au panier.';
             }
         } catch (PDOException $ex) {
-            echo "Erreur";
+            echo "Erreur: " . $ex->getMessage();
         }
     }
     
