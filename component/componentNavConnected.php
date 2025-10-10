@@ -6,7 +6,7 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
-session_start();
+
 include "template/ini.php";
 
 $username = "Nom d'utilisateur";

@@ -1,5 +1,6 @@
 <?php
     include 'template/ini.php';
+    include 'template/chekEtat.php';
     session_start();
     include "component/componentDocType.php";
 ?>
@@ -57,11 +58,35 @@
                                 $sth->bindParam(':password', $MDP_H);
                                 
                                 if ($sth->execute()) {
-                                    $_SESSION['user_id'] = $user_id;
-                                    $_SESSION['username'] = $username;
-                                    $_SESSION['logged_in'] = true;
-                                    header('Location: accueilConnecte.php');
-                                    exit();
+                                    // Récupérer l'ID du nouvel utilisateur en faisant une requête SELECT
+                                    $get_user_sql = "SELECT idUtilisateur FROM utilisateur WHERE loginUtil = :username AND emailUtil = :email";
+                                    $get_user_sth = $dbh->prepare($get_user_sql);
+                                    $get_user_sth->bindParam(':username', $username);
+                                    $get_user_sth->bindParam(':email', $email);
+                                    $get_user_sth->execute();
+                                    $user_data = $get_user_sth->fetch(PDO::FETCH_ASSOC);
+                                    
+                                    if ($user_data) {
+                                        $user_id = $user_data['idUtilisateur'];
+                                        
+                                        // Créer la session
+                                        $_SESSION['user_id'] = $user_id;
+                                        $_SESSION['username'] = $username;
+                                        $_SESSION['logged_in'] = true;
+                                        
+                                        // Vérifier l'état des commandes du nouvel utilisateur
+                                        // Créer automatiquement une commande s'il n'en a pas
+                                        if (verifierEtatCommande($user_id)) {
+                                            header('Location: accueilConnecte.php');
+                                            exit();
+                                        } else {
+                                            echo "<p style='color: orange;'>Inscription réussie, mais erreur lors de la création de la commande.</p>";
+                                            header('Location: accueilConnecte.php');
+                                            exit();
+                                        }
+                                    } else {
+                                        echo "Erreur lors de la récupération de l'utilisateur.";
+                                    }
                                 } else {
                                     echo "Erreur lors de l'inscription.";
                                 }
