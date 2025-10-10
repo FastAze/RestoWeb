@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : jeu. 09 oct. 2025 à 09:05
+-- Généré le : ven. 10 oct. 2025 à 13:37
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -43,7 +43,28 @@ CREATE TABLE `commande` (
 --
 
 INSERT INTO `commande` (`idCommande`, `dateHeureCom`, `totalTTC`, `typeCom`, `idEtat`, `idUtilisateur`) VALUES
-(1, NULL, 18.70, NULL, 1, 1);
+(4, '2025-10-10 07:37:01', 30.80, 0, 1, 2);
+
+--
+-- Déclencheurs `commande`
+--
+DELIMITER $$
+CREATE TRIGGER `before_commande_update` BEFORE UPDATE ON `commande` FOR EACH ROW BEGIN
+DECLARE v_totalHT decimal(15,2) ;
+SET v_totalHT = 0.0 ;
+
+SELECT SUM(totalHT) INTO v_totalHT 
+FROM lignedecommande 
+WHERE idCommande = new.idCommande;
+
+IF NEW.typeCom = 1 THEN
+    SET NEW.totalTTC = v_totalHT * 1.055;
+ELSE
+    SET NEW.totalTTC = v_totalHT * 1.1;
+END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -61,7 +82,14 @@ CREATE TABLE `etat` (
 --
 
 INSERT INTO `etat` (`idEtat`, `libEtat`) VALUES
-(1, 'initialisee');
+(1, 'initialisée'),
+(2, 'finalisée'),
+(3, 'calculée'),
+(4, 'en attente'),
+(5, 'abandonnée'),
+(6, 'en préparation'),
+(7, 'prête'),
+(8, 'servie');
 
 -- --------------------------------------------------------
 
@@ -81,7 +109,8 @@ CREATE TABLE `lignedecommande` (
 --
 
 INSERT INTO `lignedecommande` (`idCommande`, `idProduit`, `quantite`, `totalHT`) VALUES
-(1, 1, 2, 17.00);
+(4, 1, 2, 17.00),
+(4, 4, 1, 11.00);
 
 --
 -- Déclencheurs `lignedecommande`
@@ -217,7 +246,8 @@ CREATE TABLE `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`idUtilisateur`, `loginUtil`, `emailUtil`, `mdpUtil`) VALUES
-(1, '123', '123@gmai.com', '$2y$10$eQB0bNABIobXJDd4cVIIROioNR5BWVIeTO49zUTZr04FRMKNxiXnm');
+(1, '123', '123@gmai.com', '$2y$10$eQB0bNABIobXJDd4cVIIROioNR5BWVIeTO49zUTZr04FRMKNxiXnm'),
+(2, 'aze', 'aze@gmail.com', '$2y$10$uJZaZENN/IM4QUWKRNYhE.Eg066tdAAoorzAgYFV1Xr2I0Mr4Y5Sy');
 
 --
 -- Index pour les tables déchargées
@@ -264,13 +294,13 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `commande`
 --
 ALTER TABLE `commande`
-  MODIFY `idCommande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idCommande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `etat`
 --
 ALTER TABLE `etat`
-  MODIFY `idEtat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idEtat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `produit`
@@ -282,7 +312,7 @@ ALTER TABLE `produit`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `idUtilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idUtilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Contraintes pour les tables déchargées
