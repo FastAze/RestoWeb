@@ -44,10 +44,12 @@
         </div>
         <div class="options-panier">
             <div class="bottom-options">
+                <form method="POST">
                 <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
                 <label><input type="radio" name="option-livreson"> Sur Place</label>
                 <label><input type="radio" name="option-livreson"> À Emporter</label>
                 <button class="bouton-valider">Valider</button>
+                </form>
             </div>
         </div>
     </div>
