@@ -4,7 +4,7 @@
     $dbh = db_connect();
     
     // Traitement de l'ajout de produit
-    if ($_POST && isset($_POST['action']) && $_POST['action'] === 'ajouter_produit') {
+    if (isset($_POST['valider'])) {
         // Ajouter du débogage
         error_log("POST reçu: " . print_r($_POST, true));
         
@@ -110,10 +110,9 @@
             <div class="voir-article-prix"></div>
             <div class="voir-article-btns">
                 <form id="ajouterProduitForm" method="POST">
-                    <input type="hidden" name="action" value="ajouter_produit">
                     <input type="hidden" name="idProduit" id="produitId">
                     <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
-                    <button type="submit" class="valider-btn"><p>Ajouter au panier</p></button>
+                    <button type="submit" class="valider-btn" name="valider"><p>Ajouter au panier</p></button>
                     <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
                 </form>
             </div>

@@ -10,7 +10,30 @@
             <?php
 
             $dbh = db_connect();
-            $user = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; // Assurez-vous que la session est démarrée et que 'user_id' est défini
+            $user = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+            // Traitement du formulaire de validation
+            if (isset($_POST['valider'])) {
+                if (isset($_POST['option-livraison'])) {
+                    if ($_POST['option-livraison'] == 'sur_place') {
+                        $option_livraison = 0;
+                    } elseif ($_POST['option-livraison'] == 'a_emporter') {
+                        $option_livraison = 1;
+                    }
+                    
+                    // Mise à jour de la commande avec le type sélectionné
+                    try {
+                        $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idUtilisateur = :utilisateur";
+                        $updateSth = $dbh->prepare($updateSql);
+                        $updateSth->execute([
+                            ':typeCom' => $option_livraison,
+                            ':utilisateur' => $user
+                        ]);
+                    } catch (PDOException $ex) {
+                        die("Erreur lors de la mise à jour : " . $ex->getMessage());
+                    }
+                }
+            }
 
             // Requête correcte : joindre lignedecommande -> produit via idProduit, et commander via idCommande
             $sql = "SELECT p.libProduit, l.quantite, l.totalHT, c.totalTTC
@@ -44,13 +67,13 @@
         </div>
         <div class="options-panier">
             <div class="bottom-options">
-                <form method="POST">
+                <form method="POST" action="Paiement.php">
                     <button class="bouton-retour" type="button" onclick="afficherArticle()">Retour</button>
                     <div class="options-livraison">
-                        <label><input type="radio" name="option-livraison" value="sur_place"> Sur Place</label>
-                        <label><input type="radio" name="option-livraison" value="a_emporter"> À Emporter</label>
+                        <label><input type="radio" name="option-livraison" value="sur_place" required> Sur Place</label>
+                        <label><input type="radio" name="option-livraison" value="a_emporter" required> À Emporter</label>
                     </div>
-                    <button class="bouton-valider" type="submit">Valider</button>
+                    <button class="bouton-valider" type="submit" name="valider">Valider</button>
                 </form>
             </div>
         </div>
