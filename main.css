@@ -340,6 +340,13 @@ nav a {
     background-color: #e0e0e0;
 }
 
+.boutons-paiement {
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+    margin-top: 20px;
+}
+
 .section-paiement {
     top: 0;
     left: 200px;
