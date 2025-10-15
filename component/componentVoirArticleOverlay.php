@@ -58,16 +58,31 @@
                 $idCommande = $commande['idCommande'];
             }
             
-            $sqlInsert = "INSERT INTO lignedecommande (idCommande, idProduit, quantite) VALUES (:idCommande, :idProduit, :quantite)";
-            $sthInsert = $dbh->prepare($sqlInsert);
-            $sthInsert->bindParam(':idCommande', $idCommande);
-            $sthInsert->bindParam(':idProduit', $idProduit);
-            $sthInsert->bindParam(':quantite', $quantite);
+           // Vérifier si le produit existe déjà dans la commande
+            $sqlLigneExiste = "SELECT quantite FROM lignedecommande WHERE idCommande = :idCommande AND idProduit = :idProduit";
+            $sthLigneExiste = $dbh->prepare($sqlLigneExiste);
+            $sthLigneExiste->bindParam(':idCommande', $idCommande);
+            $sthLigneExiste->bindParam(':idProduit', $idProduit);
+            $sthLigneExiste->execute();
+            $ligneExiste = $sthLigneExiste->fetch(PDO::FETCH_ASSOC);
             
-            if ($sthInsert->execute()) {
-                echo 'Produit ajouté au panier avec succès.';
+            if ($ligneExiste) {
+                // Mettre à jour la quantité existante
+                $nouvelleQuantite = $ligneExiste['quantite'] + $quantite;
+                $sqlUpdate = "UPDATE lignedecommande SET quantite = :quantite WHERE idCommande = :idCommande AND idProduit = :idProduit";
+                $sthUpdate = $dbh->prepare($sqlUpdate);
+                $sthUpdate->bindParam(':quantite', $nouvelleQuantite);
+                $sthUpdate->bindParam(':idCommande', $idCommande);
+                $sthUpdate->bindParam(':idProduit', $idProduit);
+                $sthUpdate->execute();
             } else {
-                echo 'Erreur lors de l\'ajout du produit au panier.';
+                // Insérer une nouvelle ligne de commande
+                $sqlInsert = "INSERT INTO lignedecommande (idCommande, idProduit, quantite) VALUES (:idCommande, :idProduit, :quantite)";
+                $sthInsert = $dbh->prepare($sqlInsert);
+                $sthInsert->bindParam(':idCommande', $idCommande);
+                $sthInsert->bindParam(':idProduit', $idProduit);
+                $sthInsert->bindParam(':quantite', $quantite);
+                $sthInsert->execute();
             }
         } catch (PDOException $ex) {
             echo "Erreur: " . $ex->getMessage();
@@ -99,8 +114,8 @@
                     <input type="hidden" name="idProduit" id="produitId">
                     <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
                     <button type="submit" class="valider-btn"><p>Ajouter au panier</p></button>
+                    <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
                 </form>
-                <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
             </div>
         </div>
     </section>
