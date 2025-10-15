@@ -26,10 +26,6 @@
     ?>
 
     <?php
-        include 'component/componentPaiement.php';
-    ?>
-
-    <?php
         include 'component/componentProfile.php';
     ?>
 
@@ -112,14 +108,7 @@
             }
 
             // Événements pour les boutons
-            const boutonValiderPanier = document.querySelector('.bouton-valider');
-            if (boutonValiderPanier) {
-                boutonValiderPanier.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherPaiement();
-                });
-            }
-
+            
             const boutonValiderPaiement = document.querySelector('.bouton-valider-paiement');
             if (boutonValiderPaiement) {
                 boutonValiderPaiement.addEventListener('click', function(e) {

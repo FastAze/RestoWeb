@@ -29,6 +29,11 @@
                             ':typeCom' => $option_livraison,
                             ':utilisateur' => $user
                         ]);
+
+                        // Redirection vers la page de paiement après mise à jour réussie
+                        header("Location: paiement.php");
+                        exit();
+
                     } catch (PDOException $ex) {
                         die("Erreur lors de la mise à jour : " . $ex->getMessage());
                     }
@@ -67,7 +72,7 @@
         </div>
         <div class="options-panier">
             <div class="bottom-options">
-                <form method="POST" action="Paiement.php">
+                <form method="POST" action="paiement.php">
                     <button class="bouton-retour" type="button" onclick="afficherArticle()">Retour</button>
                     <div class="options-livraison">
                         <label><input type="radio" name="option-livraison" value="sur_place" required> Sur Place</label>
