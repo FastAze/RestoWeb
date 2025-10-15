@@ -292,6 +292,19 @@ nav a {
     margin-top: 15px;
 }
 
+.bottom-options form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.options-livraison {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
 .total {
     font-size: 18px;
     font-weight: bold;

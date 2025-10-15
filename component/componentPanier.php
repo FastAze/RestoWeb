@@ -45,10 +45,12 @@
         <div class="options-panier">
             <div class="bottom-options">
                 <form method="POST">
-                <button class="bouton-retour" onclick="afficherArticle()">Retour</button>
-                <label><input type="radio" name="option-livreson"> Sur Place</label>
-                <label><input type="radio" name="option-livreson"> À Emporter</label>
-                <button class="bouton-valider">Valider</button>
+                    <button class="bouton-retour" type="button" onclick="afficherArticle()">Retour</button>
+                    <div class="options-livraison">
+                        <label><input type="radio" name="option-livraison" value="sur_place"> Sur Place</label>
+                        <label><input type="radio" name="option-livraison" value="a_emporter"> À Emporter</label>
+                    </div>
+                    <button class="bouton-valider" type="submit">Valider</button>
                 </form>
             </div>
         </div>
