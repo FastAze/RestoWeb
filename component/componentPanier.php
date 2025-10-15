@@ -12,6 +12,13 @@
             $dbh = db_connect();
             $user = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
+            // Vérifier si l'utilisateur est connecté
+            if (!$user) {
+                echo '<div class="message-erreur">Veuillez vous connecter pour voir votre panier.</div>';
+                echo '</div></div></section>';
+                return;
+            }
+
             // Traitement du formulaire de validation
             if (isset($_POST['valider'])) {
                 if (isset($_POST['option-livraison'])) {
@@ -23,29 +30,49 @@
                     
                     // Mise à jour de la commande avec le type sélectionné
                     try {
-                        $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idUtilisateur = :utilisateur";
-                        $updateSth = $dbh->prepare($updateSql);
-                        $updateSth->execute([
-                            ':typeCom' => $option_livraison,
-                            ':utilisateur' => $user
-                        ]);
-
-                        // Redirection vers la page de paiement après mise à jour réussie
-                        header("Location: paiement.php");
-                        exit();
+                        // D'abord, récupérer l'ID de la commande active de l'utilisateur
+                        $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
+                        $getCommandeSth = $dbh->prepare($getCommandeSql);
+                        $getCommandeSth->execute([':utilisateur' => $user]);
+                        $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
+                        
+                        if ($commande) {
+                            // Mise à jour de la commande trouvée
+                            $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idCommande = :idCommande";
+                            $updateSth = $dbh->prepare($updateSql);
+                            $result = $updateSth->execute([
+                                ':typeCom' => $option_livraison,
+                                ':idCommande' => $commande['idCommande']
+                            ]);
+                            
+                            if ($updateSth->rowCount() > 0) {
+                                // Redirection vers la page de paiement après mise à jour réussie
+                                echo "<script>
+                                    alert('Type de livraison mis à jour avec succès!');
+                                    window.location.href = 'paiement.php';
+                                </script>";
+                                exit();
+                            } else {
+                                echo "<script>alert('Erreur: Aucune modification effectuée.');</script>";
+                            }
+                        } else {
+                            echo "<script>alert('Erreur: Aucune commande active trouvée.');</script>";
+                        }
 
                     } catch (PDOException $ex) {
-                        die("Erreur lors de la mise à jour : " . $ex->getMessage());
+                        echo "<script>alert('Erreur lors de la mise à jour : " . addslashes($ex->getMessage()) . "');</script>";
                     }
                 }
             }
 
             // Requête correcte : joindre lignedecommande -> produit via idProduit, et commander via idCommande
-            $sql = "SELECT p.libProduit, l.quantite, l.totalHT, c.totalTTC
+            // Sélectionner seulement les articles de la commande active (état = 1)
+            $sql = "SELECT p.libProduit, l.quantite, l.totalHT, c.totalTTC, c.idCommande
                     FROM lignedecommande l
                     JOIN produit p ON l.idProduit = p.idProduit
                     JOIN commande c ON c.idCommande = l.idCommande
-                    WHERE c.idUtilisateur = :utilisateur";
+                    WHERE c.idUtilisateur = :utilisateur AND c.idEtat = 1
+                    ORDER BY c.dateHeureCom DESC";
 
             try {
                     // Préparation et exécution de la requête avec paramètre lié
@@ -56,6 +83,10 @@
             } catch (PDOException $ex) {
                 // Gestion des erreurs
                 die("Erreur lors de la requête SQL : " . $ex->getMessage());
+            }
+
+            if (empty($panier)) {
+                echo '<div class="message-vide">Votre panier est vide.</div>';
             }
 
             foreach ($panier as $panié) {    
@@ -72,7 +103,7 @@
         </div>
         <div class="options-panier">
             <div class="bottom-options">
-                <form method="POST" action="paiement.php">
+                <form method="POST" action="">
                     <button class="bouton-retour" type="button" onclick="afficherArticle()">Retour</button>
                     <div class="options-livraison">
                         <label><input type="radio" name="option-livraison" value="sur_place" required> Sur Place</label>
