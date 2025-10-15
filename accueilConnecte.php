@@ -5,7 +5,7 @@
     session_start();
     
     // Traitement de l'ajout de produit - DOIT être traité AVANT tout output HTML
-    if (isset($_POST['valider'])) {
+    if (isset($_POST['valider']) && isset($_POST['idProduit']) && isset($_POST['quantite'])) {
         // Connexion à la base de données
         $dbh = db_connect();
         
