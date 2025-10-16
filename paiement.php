@@ -37,17 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_paiement'])) 
     
     if (empty($erreurs)) {
         // Traitement du paiement réussi
-        // Ici vous pouvez mettre à jour l'état de la commande dans la base de données
         try {
             $dbh = db_connect();
             $user_id = $_SESSION['user_id'];
             
-            // Mettre à jour l'état de la commande (par exemple, passer de l'état 1 à l'état 2)
+            // Mettre à jour l'état de la commande
             $updateSql = "UPDATE commande SET idEtat = 2 WHERE idUtilisateur = :user_id AND idEtat = 1";
             $updateSth = $dbh->prepare($updateSql);
             $updateSth->execute([':user_id' => $user_id]);
             
-            $_SESSION['message_succes'] = 'Paiement effectué avec succès!';
+            $_SESSION['message_succes'] = 'paiement_valide';
         } catch (PDOException $ex) {
             $_SESSION['message_erreur'] = 'Erreur lors du traitement du paiement.';
             error_log("Erreur paiement : " . $ex->getMessage());
@@ -126,6 +125,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
         $stmt = $dbh->prepare($sql);
         $stmt->execute([':user' => $user_id]);
         
+        $_SESSION['message_succes'] = 'paiement_valide';
         header('Location: accueilConnecte.php');
         exit();
     } catch (PDOException $e) {
@@ -148,7 +148,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
         </div>
         <div class="formulaire-paiement">
             <form method="POST" id="formPaiement">
-                <input type="hidden" name="action" value="valider_paiement">
+                <input type="hidden" name="valider_paiement" value="1">
                 <div class="champ-paiement">
                     <label for="carte">Numéro de carte bancaire :</label>
                     <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456" required>
@@ -174,6 +174,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
         </div>
     </div>
 </section>
+
+<!-- Popup de confirmation -->
+<div id="popupConfirmation" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #28a745; margin-bottom: 20px;">✓ Paiement validé</h3>
+        <p style="margin-bottom: 20px;">Vous serez notifié par mail quand la commande sera prête.</p>
+        <button onclick="fermerPopup()" style="background: #28a745; color: white; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer; font-size: 16px;">OK</button>
+    </div>
+</div>
 
 <script>
 // Script minimal pour le formatage côté client (amélioration UX uniquement)
@@ -213,30 +222,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const formPaiement = document.getElementById('formPaiement');
     if (formPaiement) {
         formPaiement.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const carte = document.getElementById('carte').value.trim();
             const ccv = document.getElementById('ccv').value.trim();
             const date = document.getElementById('date').value.trim();
             
             if (carte.replace(/\s/g, '').length < 16) {
-                e.preventDefault();
                 alert('Le numéro de carte doit contenir 16 chiffres.');
                 return false;
             }
             
             if (ccv.length < 3) {
-                e.preventDefault();
                 alert('Le code CCV doit contenir 3 chiffres.');
                 return false;
             }
             
             if (date.length < 5) {
-                e.preventDefault();
                 alert('La date d\'expiration doit être au format MM/AA.');
                 return false;
             }
+            
+            // Afficher le popup
+            document.getElementById('popupConfirmation').style.display = 'flex';
         });
     }
 });
+
+function fermerPopup() {
+    // Soumettre le formulaire après fermeture du popup
+    document.getElementById('formPaiement').submit();
+}
 </script>
 
 </body>
