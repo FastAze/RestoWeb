@@ -10,6 +10,62 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Traitement du formulaire de paiement
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_paiement'])) {
+    $carte = isset($_POST['carte']) ? preg_replace('/\s/', '', $_POST['carte']) : '';
+    $ccv = isset($_POST['ccv']) ? $_POST['ccv'] : '';
+    $date = isset($_POST['date']) ? $_POST['date'] : '';
+    
+    $erreurs = [];
+    
+    // Validation des champs
+    if (empty($carte) || empty($ccv) || empty($date)) {
+        $erreurs[] = 'Veuillez remplir tous les champs obligatoires.';
+    }
+    
+    if (!empty($carte) && !preg_match('/^\d{16}$/', $carte)) {
+        $erreurs[] = 'Le numéro de carte doit contenir 16 chiffres.';
+    }
+    
+    if (!empty($ccv) && !preg_match('/^\d{3}$/', $ccv)) {
+        $erreurs[] = 'Le code CCV doit contenir 3 chiffres.';
+    }
+    
+    if (!empty($date) && !preg_match('/^\d{2}\/\d{2}$/', $date)) {
+        $erreurs[] = 'La date d\'expiration doit être au format MM/AA.';
+    }
+    
+    if (empty($erreurs)) {
+        // Traitement du paiement réussi
+        // Ici vous pouvez mettre à jour l'état de la commande dans la base de données
+        try {
+            $dbh = db_connect();
+            $user_id = $_SESSION['user_id'];
+            
+            // Mettre à jour l'état de la commande (par exemple, passer de l'état 1 à l'état 2)
+            $updateSql = "UPDATE commande SET idEtat = 2 WHERE idUtilisateur = :user_id AND idEtat = 1";
+            $updateSth = $dbh->prepare($updateSql);
+            $updateSth->execute([':user_id' => $user_id]);
+            
+            $_SESSION['message_succes'] = 'Paiement effectué avec succès!';
+        } catch (PDOException $ex) {
+            $_SESSION['message_erreur'] = 'Erreur lors du traitement du paiement.';
+            error_log("Erreur paiement : " . $ex->getMessage());
+        }
+        
+        header('Location: accueilConnecte.php');
+        exit();
+    } else {
+        $_SESSION['message_erreur'] = implode('<br>', $erreurs);
+    }
+}
+
+// Traitement du bouton Annuler
+if (isset($_POST['annuler_paiement'])) {
+    header('Location: accueilConnecte.php');
+    exit();
+}
+
 // Récupération des informations de la commande active
 $totalTTC = 0.00;
 $typeCommande = 'Non défini';
@@ -58,40 +114,43 @@ if (isset($_SESSION['user_id'])) {
     <section class="section-paiement" id="sectionPaiement">
     <div class="conteneur-paiement">
         <h2>Paiement</h2>
+        
         <div class="info-commande">
             <div class="commande-details">
                 <span><strong>Commande N° :</strong> <?php echo $idCommande ? $idCommande : 'Non définie'; ?></span>
                 <span><strong>Type :</strong> <?php echo htmlspecialchars($typeCommande); ?></span>
             </div>
         </div>
-        <div class="formulaire-paiement">
-            <div class="champ-paiement">
-                <label for="carte">Numéro de carte bancaire :</label>
-                <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456">
-            </div>
-            <div class="champs-inline">
-                <div class="champ-ccv">
-                    <label for="ccv">CCV :</label>
-                    <input type="text" id="ccv" name="ccv" maxlength="3">
+        <form method="POST" action="">
+            <div class="formulaire-paiement">
+                <div class="champ-paiement">
+                    <label for="carte">Numéro de carte bancaire :</label>
+                    <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456" required maxlength="19" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}">
                 </div>
-                <div class="champ-date">
-                    <label for="date">Date :</label>
-                    <input type="text" id="date" name="date" placeholder="MM/AA" maxlength="5">
+                <div class="champs-inline">
+                    <div class="champ-ccv">
+                        <label for="ccv">CCV :</label>
+                        <input type="text" id="ccv" name="ccv" maxlength="3" required pattern="\d{3}">
+                    </div>
+                    <div class="champ-date">
+                        <label for="date">Date :</label>
+                        <input type="text" id="date" name="date" placeholder="MM/AA" maxlength="5" required pattern="\d{2}\/\d{2}">
+                    </div>
+                    <div class="montant">
+                        <span>Montant : <?php echo number_format($totalTTC, 2, ',', ' '); ?>€</span>
+                    </div>
                 </div>
-                <div class="montant">
-                    <span>Montant : <?php echo number_format($totalTTC, 2, ',', ' '); ?>€</span>
+                <div class="boutons-paiement">
+                    <button class="bouton-retour" type="submit" name="annuler_paiement">Annuler</button>
+                    <button class="bouton-valider" type="submit" name="valider_paiement">Valider</button>
                 </div>
             </div>
-            <div class="boutons-paiement">
-                <button class="bouton-retour" onclick="window.location.href='accueilConnecte.php'">Annuler</button>
-                <button class="bouton-valider" id="boutonValider">Valider</button>
-            </div>
-        </div>
+        </form>
     </div>
 </section>
 
 <script>
-// Script pour gérer les interactions de la page de paiement
+// Script minimal pour le formatage côté client (amélioration UX uniquement)
 document.addEventListener('DOMContentLoaded', function() {
     // Formatage automatique du numéro de carte
     const carteInput = document.getElementById('carte');
@@ -123,53 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.value = e.target.value.replace(/\D/g, '');
         });
     }
-    
-    // Gestionnaire pour le bouton de validation
-    const boutonValider = document.getElementById('boutonValider');
-    if (boutonValider) {
-        boutonValider.addEventListener('click', function(e) {
-            e.preventDefault();
-            validerPaiement();
-            // Retour à la page d'accueil après validation
-            setTimeout(function() {
-                window.location.href = 'accueilConnecte.php';
-            }, 1);
-        });
-    }
 });
-
-// Fonction pour valider le paiement
-function validerPaiement() {
-    const carte = document.getElementById('carte').value.trim();
-    const ccv = document.getElementById('ccv').value.trim();
-    const date = document.getElementById('date').value.trim();
-    
-    // Validation basique des champs
-    if (!carte || !ccv || !date) {
-        alert('Veuillez remplir tous les champs obligatoires.');
-        return;
-    }
-    
-    if (carte.replace(/\s/g, '').length < 16) {
-        alert('Le numéro de carte doit contenir 16 chiffres.');
-        return;
-    }
-    
-    if (ccv.length < 3) {
-        alert('Le code CCV doit contenir 3 chiffres.');
-        return;
-    }
-    
-    if (date.length < 5) {
-        alert('La date d\'expiration doit être au format MM/AA.');
-        return;
-    }
-}
-
-// Fonction pour retourner à l'accueil
-function retourAccueil() {
-    window.location.href = 'accueilConnecte.php';
-}
 </script>
 
 </body>

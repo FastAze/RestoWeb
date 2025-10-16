@@ -30,7 +30,7 @@
                 $panierCount = $checkPanierSth->fetch(PDO::FETCH_ASSOC);
                 
                 if ($panierCount['nbArticles'] == 0) {
-                    echo "<script>alert('Votre panier est vide. Ajoutez des articles avant de valider.');</script>";
+                    $_SESSION['message_erreur'] = 'Votre panier est vide. Ajoutez des articles avant de valider.';
                 } else {
                     if (isset($_POST['option-livraison'])) {
                         if ($_POST['option-livraison'] == 'sur_place') {
@@ -58,20 +58,18 @@
                                 
                                 if ($updateSth->rowCount() > 0) {
                                     // Redirection vers la page de paiement après mise à jour réussie
-                                    echo "<script>
-                                        alert('Type de livraison mis à jour avec succès!');
-                                        window.location.href = 'paiement.php';
-                                    </script>";
+                                    $_SESSION['message_succes'] = 'Type de livraison mis à jour avec succès!';
+                                    header('Location: paiement.php');
                                     exit();
                                 } else {
-                                    echo "<script>alert('Erreur: Aucune modification effectuée.');</script>";
+                                    $_SESSION['message_erreur'] = 'Erreur: Aucune modification effectuée.';
                                 }
                             } else {
-                                echo "<script>alert('Erreur: Aucune commande active trouvée.');</script>";
+                                $_SESSION['message_erreur'] = 'Erreur: Aucune commande active trouvée.';
                             }
 
                         } catch (PDOException $ex) {
-                            echo "<script>alert('Erreur lors de la mise à jour : " . addslashes($ex->getMessage()) . "');</script>";
+                            $_SESSION['message_erreur'] = 'Erreur lors de la mise à jour : ' . $ex->getMessage();
                         }
                     }
                 }
