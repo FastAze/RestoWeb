@@ -10,6 +10,62 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Traitement du formulaire de paiement
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_paiement'])) {
+    $carte = isset($_POST['carte']) ? preg_replace('/\s/', '', $_POST['carte']) : '';
+    $ccv = isset($_POST['ccv']) ? $_POST['ccv'] : '';
+    $date = isset($_POST['date']) ? $_POST['date'] : '';
+    
+    $erreurs = [];
+    
+    // Validation des champs
+    if (empty($carte) || empty($ccv) || empty($date)) {
+        $erreurs[] = 'Veuillez remplir tous les champs obligatoires.';
+    }
+    
+    if (!empty($carte) && !preg_match('/^\d{16}$/', $carte)) {
+        $erreurs[] = 'Le numéro de carte doit contenir 16 chiffres.';
+    }
+    
+    if (!empty($ccv) && !preg_match('/^\d{3}$/', $ccv)) {
+        $erreurs[] = 'Le code CCV doit contenir 3 chiffres.';
+    }
+    
+    if (!empty($date) && !preg_match('/^\d{2}\/\d{2}$/', $date)) {
+        $erreurs[] = 'La date d\'expiration doit être au format MM/AA.';
+    }
+    
+    if (empty($erreurs)) {
+        // Traitement du paiement réussi
+        // Ici vous pouvez mettre à jour l'état de la commande dans la base de données
+        try {
+            $dbh = db_connect();
+            $user_id = $_SESSION['user_id'];
+            
+            // Mettre à jour l'état de la commande (par exemple, passer de l'état 1 à l'état 2)
+            $updateSql = "UPDATE commande SET idEtat = 2 WHERE idUtilisateur = :user_id AND idEtat = 1";
+            $updateSth = $dbh->prepare($updateSql);
+            $updateSth->execute([':user_id' => $user_id]);
+            
+            $_SESSION['message_succes'] = 'Paiement effectué avec succès!';
+        } catch (PDOException $ex) {
+            $_SESSION['message_erreur'] = 'Erreur lors du traitement du paiement.';
+            error_log("Erreur paiement : " . $ex->getMessage());
+        }
+        
+        header('Location: accueilConnecte.php');
+        exit();
+    } else {
+        $_SESSION['message_erreur'] = implode('<br>', $erreurs);
+    }
+}
+
+// Traitement du bouton Annuler
+if (isset($_POST['annuler_paiement'])) {
+    header('Location: accueilConnecte.php');
+    exit();
+}
+
 // Récupération des informations de la commande active
 $totalTTC = 0.00;
 $typeCommande = 'Non défini';
@@ -83,6 +139,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
     <section class="section-paiement" id="sectionPaiement">
     <div class="conteneur-paiement">
         <h2>Paiement</h2>
+        
         <div class="info-commande">
             <div class="commande-details">
                 <span><strong>Commande N° :</strong> <?php echo $idCommande ? $idCommande : 'Non définie'; ?></span>
@@ -119,7 +176,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
 </section>
 
 <script>
-// Script pour gérer les interactions de la page de paiement
+// Script minimal pour le formatage côté client (amélioration UX uniquement)
 document.addEventListener('DOMContentLoaded', function() {
     // Formatage automatique du numéro de carte
     const carteInput = document.getElementById('carte');
