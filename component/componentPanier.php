@@ -5,6 +5,7 @@
             <div class="nom-article">Nom de l'article</div>
             <div class="quantité-article">Quantité</div>
             <div class="prix-article">Prix</div>
+            <div></div>
         </div>
         <div class="articles-panier">
             <?php
@@ -17,6 +18,35 @@
                 echo '<div class="message-erreur">Veuillez vous connecter pour voir votre panier.</div>';
                 echo '</div></div></section>';
                 return;
+            }
+
+            // Traitement de la suppression d'un article
+            if (isset($_POST['supprimer']) && isset($_POST['idProduit'])) {
+                try {
+                    $idProduitSuppr = (int)$_POST['idProduit'];
+                    
+                    // Récupérer l'ID de la commande active
+                    $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
+                    $getCommandeSth = $dbh->prepare($getCommandeSql);
+                    $getCommandeSth->execute([':utilisateur' => $user]);
+                    $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
+                    
+                    if ($commande) {
+                        // Supprimer la ligne de commande
+                        $deleteSql = "DELETE FROM lignedecommande WHERE idCommande = :idCommande AND idProduit = :idProduit";
+                        $deleteSth = $dbh->prepare($deleteSql);
+                        $deleteSth->execute([
+                            ':idCommande' => $commande['idCommande'],
+                            ':idProduit' => $idProduitSuppr
+                        ]);
+                        
+                        $_SESSION['message_succes'] = 'Article supprimé du panier.';
+                        header('Location: ' . $_SERVER['PHP_SELF']);
+                        exit();
+                    }
+                } catch (PDOException $ex) {
+                    $_SESSION['message_erreur'] = 'Erreur lors de la suppression : ' . $ex->getMessage();
+                }
             }
 
             // Traitement du formulaire de validation
@@ -75,9 +105,8 @@
                 }
             }
 
-            // Requête correcte : joindre lignedecommande -> produit via idProduit, et commander via idCommande
-            // Sélectionner seulement les articles de la commande active (état = 1)
-            $sql = "SELECT p.libProduit, l.quantite, l.totalHT, c.totalTTC, c.idCommande
+            // Requête pour récupérer les articles du panier
+            $sql = "SELECT p.idProduit, p.libProduit, l.quantite, l.totalHT, c.totalTTC, c.idCommande
                     FROM lignedecommande l
                     JOIN produit p ON l.idProduit = p.idProduit
                     JOIN commande c ON c.idCommande = l.idCommande
@@ -85,13 +114,10 @@
                     ORDER BY c.dateHeureCom DESC";
 
             try {
-                    // Préparation et exécution de la requête avec paramètre lié
                     $sth = $dbh->prepare($sql);
                     $sth->execute([':utilisateur' => $user]);
-                    // Récupération de tous les résultats
                     $panier = $sth->fetchAll(PDO::FETCH_ASSOC);
             } catch (PDOException $ex) {
-                // Gestion des erreurs
                 die("Erreur lors de la requête SQL : " . $ex->getMessage());
             }
 
@@ -100,12 +126,17 @@
             }
 
             foreach ($panier as $panié) {    
-            echo '<div class="article-panier">';
-            echo '<div class="details-article">' . htmlspecialchars($panié['libProduit']) . '</div>';
-            echo '<div class="quantité-article">' . htmlspecialchars($panié['quantite']) . '</div>';
-            echo '<div class="cout-article">' . htmlspecialchars($panié['totalHT']) . '€</div>';
-            echo '</div>';
-                
+                echo '<div class="article-panier">';
+                echo '<div class="details-article">' . htmlspecialchars($panié['libProduit']) . '</div>';
+                echo '<div class="quantité-article">' . htmlspecialchars($panié['quantite']) . '</div>';
+                echo '<div class="cout-article">' . htmlspecialchars($panié['totalHT']) . '€</div>';
+                echo '<div class="action-article">';
+                echo '<form method="POST" style="margin: 0;">';
+                echo '<input type="hidden" name="idProduit" value="' . $panié['idProduit'] . '">';
+                echo '<button type="submit" name="supprimer" class="bouton-supprimer">Supprimer</button>';
+                echo '</form>';
+                echo '</div>';
+                echo '</div>';
             }
             
             ?>
