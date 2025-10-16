@@ -1,5 +1,13 @@
-<?php
-    include "component/componentDocType.php";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoWeb</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <?php
     include 'template/ini.php';
     include 'template/chekEtat.php';
     session_start();
@@ -62,7 +70,7 @@
                 $idCommande = $commande['idCommande'];
             }
             
-           // Vérifier si le produit existe déjà dans la commande
+            // Vérifier si le produit existe déjà dans la commande
             $sqlLigneExiste = "SELECT quantite FROM lignedecommande WHERE idCommande = :idCommande AND idProduit = :idProduit";
             $sthLigneExiste = $dbh->prepare($sqlLigneExiste);
             $sthLigneExiste->bindParam(':idCommande', $idCommande);
@@ -87,7 +95,6 @@
                 $sthInsert->bindParam(':idProduit', $idProduit);
                 $sthInsert->bindParam(':quantite', $quantite);
                 $sthInsert->execute();
-                
             }
 
             // Rafraîchir la page après ajout réussi
@@ -102,28 +109,104 @@
     if (isset($_SESSION['user_id'])) {
         verifierEtatCommande($_SESSION['user_id']);
     }
-?>
-<body>
-    <?php
-        include 'component/componentNavConnected.php'; 
+
+    if (isset($_GET['logout'])) {
+        session_start();
+        session_destroy();
+        header("Location: index.php");
+        exit();
+    }
+
+    include "template/ini.php";
+
+    $username = "Nom d'utilisateur";
+
+    if (isset($_SESSION['user_id'])) {
+        $dbh = db_connect();
+        $sql = "SELECT loginUtil FROM utilisateur WHERE idUtil = :user_id";
+        try {
+            $sth = $dbh->prepare($sql);
+            $sth->execute([':user_id' => $_SESSION['user_id']]);
+            
+            $user = $sth->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                $username = htmlspecialchars($user['loginUtil']);
+            }
+        } catch (PDOException $ex) {
+            error_log("Erreur lors de la requête SQL : " . $ex->getMessage());
+        }
+    }
     ?>
+
+    <nav>
+        <div class="nav-top">
+            <div class="logo"><a href="accueilConnecte.php">RestoWeb</a></div>
+            <div class="pannier-notif">
+                <a class="pannier" href="panier.php">Panier</a>
+                <a><img src="image/notif.png" alt="notif"></a>
+            </div>
+        </div>
+        
+        <div class="auth-buttons">
+            <a class="logout" href="?logout=1">Déconnexion</a>
+            <a class="profile"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></a>
+        </div>
+    </nav>
+
+    <section class="notification">
+        <div class="notification-boite">
+            <p>Votre commande est en cours de route!</p>
+        </div>
+    </section>
+
     <section class="sectionArticle" id="sectionArticle">
         <div class="areaArticle">
             <?php
-                include "component/componentArticle.php";
+            include "component/componentArticle.php";
             ?>
         </div>
     </section>
-    <?php
-        include 'component/componentProfile.php';
-    ?>
 
     <?php
-        include 'component/componentVoirArticleOverlay.php';
+    include 'component/componentProfile.php';
+    include "template/ini.php";
+    
+    // Connexion à la base de données
+    $dbh = db_connect();
+    
+    // Récupération des produits pour affichage
+    $sql = "SELECT idProduit, libProduit, prixProduitHT FROM produit";
+    try {
+        $sth = $dbh->prepare($sql);
+        $sth->execute();
+        $produits = $sth->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $ex) {
+        die("Erreur lors de la requête SQL : " . $ex->getMessage());
+    }
     ?>
+    
+    <div class="voir-article-overlay" id="voirArticleOverlay">
+        <section class="voir-article">
+            <div class="voir-article-img">
+                <img src="" alt="">
+            </div>
+            <div class="voir-article-details">
+                <h2 class="voir-article-nom"></h2>
+                <div class="voir-article-prix"></div>
+                <div class="voir-article-btns">
+                    <form id="ajouterProduitForm" method="POST">
+                        <input type="hidden" name="idProduit" id="produitId">
+                        <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
+                        <button type="submit" class="valider-btn" name="valider"><p>Ajouter au panier</p></button>
+                        <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <?php
-        include 'component/componentVoirCommandeOverlay.php';
+    include 'component/componentVoirCommandeOverlay.php';
     ?>
 
     <script>
@@ -133,12 +216,12 @@
                 const imgSrc = this.querySelector('img').src;
                 const nom = this.querySelector('h2').textContent;
                 const prix = this.querySelector('h3').textContent;
-                const idProduit = this.getAttribute('data-id'); // Récupérer l'ID du produit
+                const idProduit = this.getAttribute('data-id');
 
                 overlay.querySelector('.voir-article-img img').src = imgSrc;
                 overlay.querySelector('.voir-article-nom').textContent = nom;
                 overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
-                overlay.querySelector('#produitId').value = idProduit; // Définir l'ID dans le champ caché
+                overlay.querySelector('#produitId').value = idProduit;
                 overlay.style.display = 'flex';
             });
         });
@@ -148,12 +231,13 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Masquer la notification au chargement et toggle au clic
             const notifSection = document.querySelector('.notification');
             const notifIcon = document.querySelector('.pannier-notif a img');
+            
             if (notifSection) {
                 notifSection.style.display = 'none';
             }
+            
             if (notifIcon) {
                 notifIcon.parentElement.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -163,15 +247,12 @@
                 });
             }
 
-            // Fonctions de navigation entre sections
             function afficherSection(sectionAfficher, sectionsACacher) {
-                // Afficher la section demandée
                 const sectionAAfficher = document.getElementById(sectionAfficher) || document.querySelector('.' + sectionAfficher);
                 if (sectionAAfficher) {
                     sectionAAfficher.style.display = 'block';
                 }
                 
-                // Cacher toutes les autres sections
                 sectionsACacher.forEach(function(sectionId) {
                     const section = document.getElementById(sectionId) || document.querySelector('.' + sectionId);
                     if (section) {
@@ -196,8 +277,6 @@
                 afficherSection('sectionProfile', ['sectionPanier', 'sectionPaiement', 'sectionArticle']);
             }
 
-            // Événements pour les boutons
-            
             const boutonValiderPaiement = document.querySelector('.bouton-valider-paiement');
             if (boutonValiderPaiement) {
                 boutonValiderPaiement.addEventListener('click', function(e) {
@@ -222,8 +301,6 @@
                 });
             }
 
-
-
             const logoLien = document.querySelector('.logo a');
             if (logoLien) {
                 logoLien.addEventListener('click', function(e) {
@@ -232,7 +309,6 @@
                 });
             }
 
-            // Événement pour afficher le profile
             const lienProfile = document.querySelector('.profile');
             if (lienProfile) {
                 lienProfile.addEventListener('click', function(e) {
@@ -241,7 +317,6 @@
                 });
             }
 
-            // Gestion de l'overlay pour voir le détail d'une commande
             const voirCommandeOverlay = document.getElementById('voirCommandeOverlay');
             const closeVoirCommande = document.getElementById('closeVoirCommande');
             const voirCommandeBtns = document.querySelectorAll('.voir-commande-btn');
@@ -249,8 +324,6 @@
             voirCommandeBtns.forEach(function(btn) {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    // Ici, on pourrait récupérer les données spécifiques à la commande
-                    // et les injecter dans l'overlay
                     if (voirCommandeOverlay) {
                         voirCommandeOverlay.classList.add('active');
                     }
@@ -263,7 +336,6 @@
                 });
             }
 
-            // Fermer l'overlay en cliquant en dehors de la popup
             if (voirCommandeOverlay) {
                 voirCommandeOverlay.addEventListener('click', function(e) {
                     if (e.target === voirCommandeOverlay) {
