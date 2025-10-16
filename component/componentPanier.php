@@ -72,28 +72,35 @@
                         // Mise à jour de la commande avec le type sélectionné
                         try {
                             // D'abord, récupérer l'ID de la commande active de l'utilisateur
-                            $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
+                            $getCommandeSql = "SELECT idCommande, typeCom FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
                             $getCommandeSth = $dbh->prepare($getCommandeSql);
                             $getCommandeSth->execute([':utilisateur' => $user]);
                             $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
                             
                             if ($commande) {
-                                // Mise à jour de la commande trouvée
-                                $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idCommande = :idCommande";
-                                $updateSth = $dbh->prepare($updateSql);
-                                $result = $updateSth->execute([
-                                    ':typeCom' => $option_livraison,
-                                    ':idCommande' => $commande['idCommande']
-                                ]);
-                                
-                                if ($updateSth->rowCount() > 0) {
-                                    // Redirection vers la page de paiement après mise à jour réussie
-                                    $_SESSION['message_succes'] = 'Type de livraison mis à jour avec succès!';
-                                    header('Location: paiement.php');
-                                    exit();
+                                // Vérifier si le type sélectionné est différent du type actuel
+                                if ($commande['typeCom'] != $option_livraison) {
+                                    // Mise à jour de la commande uniquement si le type a changé
+                                    $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idCommande = :idCommande";
+                                    $updateSth = $dbh->prepare($updateSql);
+                                    $result = $updateSth->execute([
+                                        ':typeCom' => $option_livraison,
+                                        ':idCommande' => $commande['idCommande']
+                                    ]);
+                                    
+                                    if ($updateSth->rowCount() > 0) {
+                                        $_SESSION['message_succes'] = 'Type de livraison mis à jour avec succès!';
+                                    } else {
+                                        $_SESSION['message_erreur'] = 'Erreur: Aucune modification effectuée.';
+                                    }
                                 } else {
-                                    $_SESSION['message_erreur'] = 'Erreur: Aucune modification effectuée.';
+                                    // Le type est déjà correct, pas besoin de mise à jour
+                                    $_SESSION['message_succes'] = 'Type de livraison confirmé.';
                                 }
+                                
+                                // Redirection vers la page de paiement
+                                header('Location: paiement.php');
+                                exit();
                             } else {
                                 $_SESSION['message_erreur'] = 'Erreur: Aucune commande active trouvée.';
                             }
