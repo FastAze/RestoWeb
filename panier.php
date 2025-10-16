@@ -9,7 +9,6 @@
 <body>
     <?php
     include 'template/ini.php';
-    include 'component/componentNavConnected.php';
     session_start();
 ?>
     <div class="conteneur-panier">
