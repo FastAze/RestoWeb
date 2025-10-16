@@ -20,6 +20,39 @@
                 return;
             }
 
+            // Traitement de la modification de quantité
+            if (isset($_POST['modifier_quantite']) && isset($_POST['idProduit']) && isset($_POST['nouvelle_quantite'])) {
+                try {
+                    $idProduitModif = (int)$_POST['idProduit'];
+                    $nouvelleQuantite = (int)$_POST['nouvelle_quantite'];
+                    
+                    if ($nouvelleQuantite > 0) {
+                        // Récupérer l'ID de la commande active
+                        $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
+                        $getCommandeSth = $dbh->prepare($getCommandeSql);
+                        $getCommandeSth->execute([':utilisateur' => $user]);
+                        $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
+                        
+                        if ($commande) {
+                            // Mettre à jour la quantité
+                            $updateSql = "UPDATE lignedecommande SET quantite = :quantite WHERE idCommande = :idCommande AND idProduit = :idProduit";
+                            $updateSth = $dbh->prepare($updateSql);
+                            $updateSth->execute([
+                                ':quantite' => $nouvelleQuantite,
+                                ':idCommande' => $commande['idCommande'],
+                                ':idProduit' => $idProduitModif
+                            ]);
+                            
+                            $_SESSION['message_succes'] = 'Quantité mise à jour.';
+                            header('Location: ' . $_SERVER['PHP_SELF']);
+                            exit();
+                        }
+                    }
+                } catch (PDOException $ex) {
+                    $_SESSION['message_erreur'] = 'Erreur lors de la modification : ' . $ex->getMessage();
+                }
+            }
+
             // Traitement de la suppression d'un article
             if (isset($_POST['supprimer']) && isset($_POST['idProduit'])) {
                 try {
@@ -128,7 +161,19 @@
             foreach ($panier as $panié) {    
                 echo '<div class="article-panier">';
                 echo '<div class="details-article">' . htmlspecialchars($panié['libProduit']) . '</div>';
-                echo '<div class="quantité-article">' . htmlspecialchars($panié['quantite']) . '</div>';
+                echo '<div class="quantite-controls">';
+                echo '<form method="POST" class="form-quantite" style="margin: 0;">';
+                echo '<input type="hidden" name="idProduit" value="' . $panié['idProduit'] . '">';
+                echo '<input type="hidden" name="nouvelle_quantite" value="' . ($panié['quantite'] - 1) . '">';
+                echo '<button type="submit" name="modifier_quantite" class="btn-quantite btn-moins">-</button>';
+                echo '</form>';
+                echo '<span class="quantite-valeur">' . htmlspecialchars($panié['quantite']) . '</span>';
+                echo '<form method="POST" class="form-quantite" style="margin: 0;">';
+                echo '<input type="hidden" name="idProduit" value="' . $panié['idProduit'] . '">';
+                echo '<input type="hidden" name="nouvelle_quantite" value="' . ($panié['quantite'] + 1) . '">';
+                echo '<button type="submit" name="modifier_quantite" class="btn-quantite btn-plus">+</button>';
+                echo '</form>';
+                echo '</div>';
                 echo '<div class="cout-article">' . htmlspecialchars($panié['totalHT']) . '€</div>';
                 echo '<div class="action-article">';
                 echo '<form method="POST" style="margin: 0;">';
