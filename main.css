@@ -200,7 +200,7 @@ nav a {
 .section-panier .entete-panier,
 .section-panier .article-panier {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr auto;
     gap: 12px;
     align-items: center;
     padding: 6px 0;
@@ -232,7 +232,7 @@ nav a {
 @media (max-width: 600px) {
     .section-panier .entete-panier,
     .section-panier .article-panier {
-        grid-template-columns: 1fr 80px 80px;
+        grid-template-columns: 1fr 80px 80px 60px;
     }
 }
 
