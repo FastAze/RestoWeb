@@ -1,8 +1,16 @@
-<?php
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoWeb</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <?php
     include 'template/ini.php';
     include 'template/chekEtat.php';
     session_start();
-    include "component/componentDocType.php";
 ?>
 <body>
     <div class="connecInscrip">
