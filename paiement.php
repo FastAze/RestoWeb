@@ -51,6 +51,31 @@ if (isset($_SESSION['user_id'])) {
         error_log("Erreur lors de la récupération de la commande : " . $ex->getMessage());
     }
 }
+
+// Gestion de la validation du paiement
+if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
+    try {
+        // Récupérer les informations de la commande avant de la finaliser
+        $sqlCommande = "SELECT totalTTC FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1";
+        $sthCommande = $dbh->prepare($sqlCommande);
+        $sthCommande->execute([':utilisateur' => $user_id]);
+        $commande = $sthCommande->fetch(PDO::FETCH_ASSOC);
+        
+        // Mettre à jour l'état de la commande
+        $sql = "UPDATE commande 
+                SET idEtat = 2 
+                WHERE idUtilisateur = :user 
+                AND idEtat = 1";
+        
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute([':user' => $user_id]);
+        
+        header('Location: accueilConnecte.php');
+        exit();
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la mise à jour de l'état: " . $e->getMessage());
+    }
+}
 ?>
 
 <body>
@@ -65,27 +90,30 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
         <div class="formulaire-paiement">
-            <div class="champ-paiement">
-                <label for="carte">Numéro de carte bancaire :</label>
-                <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456">
-            </div>
-            <div class="champs-inline">
-                <div class="champ-ccv">
-                    <label for="ccv">CCV :</label>
-                    <input type="text" id="ccv" name="ccv" maxlength="3">
+            <form method="POST" id="formPaiement">
+                <input type="hidden" name="action" value="valider_paiement">
+                <div class="champ-paiement">
+                    <label for="carte">Numéro de carte bancaire :</label>
+                    <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456" required>
                 </div>
-                <div class="champ-date">
-                    <label for="date">Date :</label>
-                    <input type="text" id="date" name="date" placeholder="MM/AA" maxlength="5">
+                <div class="champs-inline">
+                    <div class="champ-ccv">
+                        <label for="ccv">CCV :</label>
+                        <input type="text" id="ccv" name="ccv" maxlength="3" required>
+                    </div>
+                    <div class="champ-date">
+                        <label for="date">Date :</label>
+                        <input type="text" id="date" name="date" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="montant">
+                        <span>Montant : <?php echo number_format($totalTTC, 2, ',', ' '); ?>€</span>
+                    </div>
                 </div>
-                <div class="montant">
-                    <span>Montant : <?php echo number_format($totalTTC, 2, ',', ' '); ?>€</span>
+                <div class="boutons-paiement">
+                    <button type="button" class="bouton-retour" onclick="window.location.href='accueilConnecte.php'">Annuler</button>
+                    <button type="submit" class="bouton-valider">Valider</button>
                 </div>
-            </div>
-            <div class="boutons-paiement">
-                <button class="bouton-retour" onclick="window.location.href='accueilConnecte.php'">Annuler</button>
-                <button class="bouton-valider" id="boutonValider">Valider</button>
-            </div>
+            </form>
         </div>
     </div>
 </section>
@@ -124,52 +152,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Gestionnaire pour le bouton de validation
-    const boutonValider = document.getElementById('boutonValider');
-    if (boutonValider) {
-        boutonValider.addEventListener('click', function(e) {
-            e.preventDefault();
-            validerPaiement();
-            // Retour à la page d'accueil après validation
-            setTimeout(function() {
-                window.location.href = 'accueilConnecte.php';
-            }, 1);
+    // Validation avant soumission du formulaire
+    const formPaiement = document.getElementById('formPaiement');
+    if (formPaiement) {
+        formPaiement.addEventListener('submit', function(e) {
+            const carte = document.getElementById('carte').value.trim();
+            const ccv = document.getElementById('ccv').value.trim();
+            const date = document.getElementById('date').value.trim();
+            
+            if (carte.replace(/\s/g, '').length < 16) {
+                e.preventDefault();
+                alert('Le numéro de carte doit contenir 16 chiffres.');
+                return false;
+            }
+            
+            if (ccv.length < 3) {
+                e.preventDefault();
+                alert('Le code CCV doit contenir 3 chiffres.');
+                return false;
+            }
+            
+            if (date.length < 5) {
+                e.preventDefault();
+                alert('La date d\'expiration doit être au format MM/AA.');
+                return false;
+            }
         });
     }
 });
-
-// Fonction pour valider le paiement
-function validerPaiement() {
-    const carte = document.getElementById('carte').value.trim();
-    const ccv = document.getElementById('ccv').value.trim();
-    const date = document.getElementById('date').value.trim();
-    
-    // Validation basique des champs
-    if (!carte || !ccv || !date) {
-        alert('Veuillez remplir tous les champs obligatoires.');
-        return;
-    }
-    
-    if (carte.replace(/\s/g, '').length < 16) {
-        alert('Le numéro de carte doit contenir 16 chiffres.');
-        return;
-    }
-    
-    if (ccv.length < 3) {
-        alert('Le code CCV doit contenir 3 chiffres.');
-        return;
-    }
-    
-    if (date.length < 5) {
-        alert('La date d\'expiration doit être au format MM/AA.');
-        return;
-    }
-}
-
-// Fonction pour retourner à l'accueil
-function retourAccueil() {
-    window.location.href = 'accueilConnecte.php';
-}
 </script>
 
 </body>
