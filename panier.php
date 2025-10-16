@@ -1,4 +1,9 @@
-<section class="section-panier" id="sectionPanier" style="display: none;">
+<?php
+    include 'component/componentDocType.php';
+    include 'template/ini.php';
+    include 'component/componentNavConnected.php';
+    session_start();
+?>
     <div class="conteneur-panier">
         <h2>Pannier</h2>
         <div class="entete-panier">
@@ -207,4 +212,23 @@
             </div>
         </div>
     </div>
-</section>
+    <script>
+                document.addEventListener('DOMContentLoaded', function() {
+            // Masquer la notification au chargement et toggle au clic
+            const notifSection = document.querySelector('.notification');
+            const notifIcon = document.querySelector('.pannier-notif a img');
+            if (notifSection) {
+                notifSection.style.display = 'none';
+            }
+            if (notifIcon) {
+                notifIcon.parentElement.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (notifSection) {
+                        notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

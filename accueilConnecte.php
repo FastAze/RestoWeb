@@ -114,11 +114,6 @@
             ?>
         </div>
     </section>
-
-    <?php
-        include 'component/componentPanier.php';
-    ?>
-
     <?php
         include 'component/componentProfile.php';
     ?>
@@ -227,13 +222,7 @@
                 });
             }
 
-            const lienPanier = document.querySelector('.pannier');
-            if (lienPanier) {
-                lienPanier.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherPanier();
-                });
-            }
+
 
             const logoLien = document.querySelector('.logo a');
             if (logoLien) {

@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="nav-top">
             <div class="logo"><a href="accueilConnecte.php">RestoWeb</a></div>
             <div class="pannier-notif">
-                <a class="pannier" href="<?php echo $_SERVER['PHP_SELF']; ?>">Pannier</a>
+                <a class="pannier" href="panier.php">Panier</a>
                 <a><img src="image/notif.png" alt="notif"></a>
             </div>
         </div>
