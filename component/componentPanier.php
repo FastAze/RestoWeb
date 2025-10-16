@@ -21,46 +21,58 @@
 
             // Traitement du formulaire de validation
             if (isset($_POST['valider'])) {
-                if (isset($_POST['option-livraison'])) {
-                    if ($_POST['option-livraison'] == 'sur_place') {
-                        $option_livraison = 0;
-                    } elseif ($_POST['option-livraison'] == 'a_emporter') {
-                        $option_livraison = 1;
-                    }
-                    
-                    // Mise à jour de la commande avec le type sélectionné
-                    try {
-                        // D'abord, récupérer l'ID de la commande active de l'utilisateur
-                        $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
-                        $getCommandeSth = $dbh->prepare($getCommandeSql);
-                        $getCommandeSth->execute([':utilisateur' => $user]);
-                        $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
-                        
-                        if ($commande) {
-                            // Mise à jour de la commande trouvée
-                            $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idCommande = :idCommande";
-                            $updateSth = $dbh->prepare($updateSql);
-                            $result = $updateSth->execute([
-                                ':typeCom' => $option_livraison,
-                                ':idCommande' => $commande['idCommande']
-                            ]);
-                            
-                            if ($updateSth->rowCount() > 0) {
-                                // Redirection vers la page de paiement après mise à jour réussie
-                                echo "<script>
-                                    alert('Type de livraison mis à jour avec succès!');
-                                    window.location.href = 'paiement.php';
-                                </script>";
-                                exit();
-                            } else {
-                                echo "<script>alert('Erreur: Aucune modification effectuée.');</script>";
-                            }
-                        } else {
-                            echo "<script>alert('Erreur: Aucune commande active trouvée.');</script>";
+                // Vérifier que le panier n'est pas vide avant de procéder
+                $checkPanierSql = "SELECT COUNT(*) as nbArticles FROM lignedecommande l
+                                   JOIN commande c ON c.idCommande = l.idCommande
+                                   WHERE c.idUtilisateur = :utilisateur AND c.idEtat = 1";
+                $checkPanierSth = $dbh->prepare($checkPanierSql);
+                $checkPanierSth->execute([':utilisateur' => $user]);
+                $panierCount = $checkPanierSth->fetch(PDO::FETCH_ASSOC);
+                
+                if ($panierCount['nbArticles'] == 0) {
+                    echo "<script>alert('Votre panier est vide. Ajoutez des articles avant de valider.');</script>";
+                } else {
+                    if (isset($_POST['option-livraison'])) {
+                        if ($_POST['option-livraison'] == 'sur_place') {
+                            $option_livraison = 0;
+                        } elseif ($_POST['option-livraison'] == 'a_emporter') {
+                            $option_livraison = 1;
                         }
+                        
+                        // Mise à jour de la commande avec le type sélectionné
+                        try {
+                            // D'abord, récupérer l'ID de la commande active de l'utilisateur
+                            $getCommandeSql = "SELECT idCommande FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1 ORDER BY dateHeureCom DESC LIMIT 1";
+                            $getCommandeSth = $dbh->prepare($getCommandeSql);
+                            $getCommandeSth->execute([':utilisateur' => $user]);
+                            $commande = $getCommandeSth->fetch(PDO::FETCH_ASSOC);
+                            
+                            if ($commande) {
+                                // Mise à jour de la commande trouvée
+                                $updateSql = "UPDATE commande SET typeCom = :typeCom WHERE idCommande = :idCommande";
+                                $updateSth = $dbh->prepare($updateSql);
+                                $result = $updateSth->execute([
+                                    ':typeCom' => $option_livraison,
+                                    ':idCommande' => $commande['idCommande']
+                                ]);
+                                
+                                if ($updateSth->rowCount() > 0) {
+                                    // Redirection vers la page de paiement après mise à jour réussie
+                                    echo "<script>
+                                        alert('Type de livraison mis à jour avec succès!');
+                                        window.location.href = 'paiement.php';
+                                    </script>";
+                                    exit();
+                                } else {
+                                    echo "<script>alert('Erreur: Aucune modification effectuée.');</script>";
+                                }
+                            } else {
+                                echo "<script>alert('Erreur: Aucune commande active trouvée.');</script>";
+                            }
 
-                    } catch (PDOException $ex) {
-                        echo "<script>alert('Erreur lors de la mise à jour : " . addslashes($ex->getMessage()) . "');</script>";
+                        } catch (PDOException $ex) {
+                            echo "<script>alert('Erreur lors de la mise à jour : " . addslashes($ex->getMessage()) . "');</script>";
+                        }
                     }
                 }
             }
