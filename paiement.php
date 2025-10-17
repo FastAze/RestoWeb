@@ -152,13 +152,16 @@
                     <span><strong>Type :</strong> <?php echo htmlspecialchars($typeCommande); ?></span>
                 </div>
             </div>
+            
             <div class="formulaire-paiement">
                 <form method="POST" id="formPaiement">
                     <input type="hidden" name="valider_paiement" value="1">
+                    
                     <div class="champ-paiement">
                         <label for="carte">Numéro de carte bancaire :</label>
                         <input type="text" id="carte" name="carte" placeholder="1234 5678 9012 3456" required>
                     </div>
+                    
                     <div class="champs-inline">
                         <div class="champ-ccv">
                             <label for="ccv">CCV :</label>
@@ -172,6 +175,7 @@
                             <span>Montant : <?php echo number_format($totalTTC, 2, ',', ' '); ?>€</span>
                         </div>
                     </div>
+                    
                     <div class="boutons-paiement">
                         <button type="button" class="bouton-retour" onclick="window.location.href='accueilConnecte.php'">Annuler</button>
                         <button type="submit" class="bouton-valider">Valider</button>
@@ -191,74 +195,74 @@
     </div>
 
     <script>
-    // Script minimal pour le formatage côté client (amélioration UX uniquement)
-    document.addEventListener('DOMContentLoaded', function() {
-        // Formatage automatique du numéro de carte
-        const carteInput = document.getElementById('carte');
-        if (carteInput) {
-            carteInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-                let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
-                if (formattedValue.length > 19) formattedValue = formattedValue.substring(0, 19);
-                e.target.value = formattedValue;
-            });
-        }
-        
-        // Formatage de la date d'expiration
-        const dateInput = document.getElementById('date');
-        if (dateInput) {
-            dateInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                }
-                e.target.value = value;
-            });
-        }
-        
-        // Validation du CCV (seulement des chiffres)
-        const ccvInput = document.getElementById('ccv');
-        if (ccvInput) {
-            ccvInput.addEventListener('input', function(e) {
-                e.target.value = e.target.value.replace(/\D/g, '');
-            });
-        }
-        
-        // Validation avant soumission du formulaire
-        const formPaiement = document.getElementById('formPaiement');
-        if (formPaiement) {
-            formPaiement.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const carte = document.getElementById('carte').value.trim();
-                const ccv = document.getElementById('ccv').value.trim();
-                const date = document.getElementById('date').value.trim();
-                
-                if (carte.replace(/\s/g, '').length < 16) {
-                    alert('Le numéro de carte doit contenir 16 chiffres.');
-                    return false;
-                }
-                
-                if (ccv.length < 3) {
-                    alert('Le code CCV doit contenir 3 chiffres.');
-                    return false;
-                }
-                
-                if (date.length < 5) {
-                    alert('La date d\'expiration doit être au format MM/AA.');
-                    return false;
-                }
-                
-                // Afficher le popup
-                document.getElementById('popupConfirmation').style.display = 'flex';
-            });
-        }
-    });
+        // Script minimal pour le formatage côté client (amélioration UX uniquement)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formatage automatique du numéro de carte
+            const carteInput = document.getElementById('carte');
+            if (carteInput) {
+                carteInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+                    let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+                    if (formattedValue.length > 19) formattedValue = formattedValue.substring(0, 19);
+                    e.target.value = formattedValue;
+                });
+            }
+            
+            // Formatage de la date d'expiration
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                dateInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+            
+            // Validation du CCV (seulement des chiffres)
+            const ccvInput = document.getElementById('ccv');
+            if (ccvInput) {
+                ccvInput.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+            }
+            
+            // Validation avant soumission du formulaire
+            const formPaiement = document.getElementById('formPaiement');
+            if (formPaiement) {
+                formPaiement.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const carte = document.getElementById('carte').value.trim();
+                    const ccv = document.getElementById('ccv').value.trim();
+                    const date = document.getElementById('date').value.trim();
+                    
+                    if (carte.replace(/\s/g, '').length < 16) {
+                        alert('Le numéro de carte doit contenir 16 chiffres.');
+                        return false;
+                    }
+                    
+                    if (ccv.length < 3) {
+                        alert('Le code CCV doit contenir 3 chiffres.');
+                        return false;
+                    }
+                    
+                    if (date.length < 5) {
+                        alert('La date d\'expiration doit être au format MM/AA.');
+                        return false;
+                    }
+                    
+                    // Afficher le popup
+                    document.getElementById('popupConfirmation').style.display = 'flex';
+                });
+            }
+        });
 
-    function fermerPopup() {
-        // Soumettre le formulaire après fermeture du popup
-        document.getElementById('formPaiement').submit();
-    }
+        function fermerPopup() {
+            // Soumettre le formulaire après fermeture du popup
+            document.getElementById('formPaiement').submit();
+        }
     </script>
 </body>
 </html>

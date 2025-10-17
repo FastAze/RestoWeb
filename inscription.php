@@ -8,11 +8,10 @@
 </head>
 <body>
     <?php
-    include 'template/ini.php';
-    include 'template/chekEtat.php';
-    session_start();
-?>
-<body>
+        include 'template/ini.php';
+        include 'template/chekEtat.php';
+        session_start();
+    ?>
     <div class="connecInscrip">
         <div class="connection-container">
             <h2>Inscription</h2>
@@ -36,8 +35,8 @@
             </form>
             <?php
                 $MDP_H = isset($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
-                $username = isset($_POST['username'])? $_POST['username'] : '';
-                $email = isset($_POST['email'])? $_POST['email'] : '';
+                $username = isset($_POST['username']) ? $_POST['username'] : '';
+                $email = isset($_POST['email']) ? $_POST['email'] : '';
 
                 if (isset($_POST['inscrire'])) {
                     // Validation des données

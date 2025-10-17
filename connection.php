@@ -8,11 +8,10 @@
 </head>
 <body>
     <?php
-    include 'template/ini.php';
-    include 'template/chekEtat.php';
-    session_start();
-?>
-<body>
+        include 'template/ini.php';
+        include 'template/chekEtat.php';
+        session_start();
+    ?>
     <div class="connecInscrip">
         <div class="connection-container">
             <h2>Connexion</h2>
