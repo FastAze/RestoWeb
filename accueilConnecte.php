@@ -193,14 +193,12 @@
             <div class="voir-article-details">
                 <h2 class="voir-article-nom"></h2>
                 <div class="voir-article-prix"></div>
-                <div class="voir-article-btns">
-                    <form id="ajouterProduitForm" method="POST">
-                        <input type="hidden" name="idProduit" id="produitId">
-                        <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
-                        <button type="submit" class="valider-btn" name="valider"><p>Ajouter au panier</p></button>
-                        <button id="closeVoirArticle" class="retour-btn"><p>Retour</p></button>
-                    </form>
-                </div>
+                <form id="ajouterProduitForm" method="POST" class="voir-article-btns">
+                    <input type="hidden" name="idProduit" id="produitId">
+                    <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
+                    <button type="submit" class="valider-btn" name="valider">Valider</button>
+                    <button type="button" id="closeVoirArticle" class="retour-btn">Retour</button>
+                </form>
             </div>
         </section>
     </div>
@@ -226,7 +224,8 @@
             });
         });
 
-        document.getElementById('closeVoirArticle').addEventListener('click', function() {
+        document.getElementById('closeVoirArticle').addEventListener('click', function(e) {
+            e.preventDefault();
             document.getElementById('voirArticleOverlay').style.display = 'none';
         });
 
