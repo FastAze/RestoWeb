@@ -69,7 +69,7 @@ nav {
 
 .logo a:hover {
     transform: scale(1.05);
-    color: var(--secondary-color);
+    color: var(--white);
 }
 
 .pannier-notif {
