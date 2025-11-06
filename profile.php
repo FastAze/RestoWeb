@@ -56,7 +56,7 @@
                             <th>Date/Heure</th>
                             <th>Type</th>
                             <th>Prix (TTC)</th>
-                            <th>Voir le panier</th>
+                            <th>État</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,11 +66,12 @@
                             
                             $idUtilisateur = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
                             
-                            $stmt = $dbh->prepare("SELECT idCommande, dateHeureCom, totalTTC, typeCom 
-                            FROM commande 
-                            WHERE idUtilisateur = :idUtilisateur
-                            AND NOT idEtat = 1
-                            ORDER BY dateHeureCom DESC");
+                            $stmt = $dbh->prepare("SELECT c.idCommande, c.dateHeureCom, c.totalTTC, c.typeCom, e.libEtat
+                            FROM commande c
+                            INNER JOIN etat e ON c.idEtat = e.idEtat
+                            WHERE c.idUtilisateur = :idUtilisateur
+                            AND c.idEtat != 1
+                            ORDER BY c.dateHeureCom DESC");
                             $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_INT);
                             $stmt->execute();
                             $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -87,7 +88,7 @@
                                     echo '<td>' . $commande['dateHeureCom'] . '</td>';
                                     echo '<td>' . $typeCommande . '</td>';
                                     echo '<td>' . $commande['totalTTC'] . '€</td>';
-                                    echo '<td><button class="voir-commande-btn" data-id="' . $commande['idCommande'] . '">Voir la commande</button></td>';
+                                    echo '<td>' . htmlspecialchars($commande['libEtat']) . '</td>';
                                     echo '</tr>';
                                 }
                             } else {
@@ -99,79 +100,6 @@
             </div>
         </div>
     </section>
-
-    <div class="voir-commande-overlay" id="voirCommandeOverlay">
-        <section class="voir-commande">
-            <div class="voir-commande-header">
-                <h2>Détail de la commande</h2>
-                <button id="closeVoirCommande" class="close-btn">✕</button>
-            </div>
-            <div class="voir-commande-content">
-                <div class="commande-info">
-                    <div class="info-row">
-                        <span class="label">N° de commande :</span>
-                        <span class="value" id="numeroCommande">500500500</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Date :</span>
-                        <span class="value" id="dateCommande">19/09/2025 - 14:30</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Statut :</span>
-                        <span class="value statut-badge" id="statutCommande">En livraison</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Type :</span>
-                        <span class="value" id="typeCommande">À emporter</span>
-                    </div>
-                </div>
-                
-                <div class="commande-articles">
-                    <h3>Articles commandés :</h3>
-                    <div class="articles-liste">
-                        <div class="article-item">
-                            <img src="image/pizza.jpg" alt="Pizza" class="article-img">
-                            <div class="article-details">
-                                <div class="article-nom">Pizza Margherita</div>
-                                <div class="article-description">Sauce tomate, mozzarella, basilic frais</div>
-                                <div class="article-quantite-prix">
-                                    <span class="quantite">Quantité: 2</span>
-                                    <span class="prix-unitaire">15€ × 2 = 30€</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="article-item">
-                            <img src="image/pizza.jpg" alt="Pizza" class="article-img">
-                            <div class="article-details">
-                                <div class="article-nom">Pizza Pepperoni</div>
-                                <div class="article-description">Sauce tomate, mozzarella, pepperoni</div>
-                                <div class="article-quantite-prix">
-                                    <span class="quantite">Quantité: 1</span>
-                                    <span class="prix-unitaire">18€ × 1 = 18€</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="commande-total">
-                    <div class="total-ligne">
-                        <span class="total-label">Sous-total :</span>
-                        <span class="total-value">48€</span>
-                    </div>
-                    <div class="total-ligne">
-                        <span class="total-label">TVA (10%) :</span>
-                        <span class="total-value">4.80€</span>
-                    </div>
-                    <div class="total-ligne total-final">
-                        <span class="total-label">Total TTC :</span>
-                        <span class="total-value">52.80€</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -190,32 +118,6 @@
                         notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
                     }
                 });
-            }
-        });
-
-        // Afficher la fenêtre "Voir la commande"
-        const voirCommandeOverlay = document.getElementById('voirCommandeOverlay');
-        const closeVoirCommande = document.getElementById('closeVoirCommande');
-        const voirCommandeBtns = document.querySelectorAll('.voir-commande-btn');
-
-        // Ouvrir l'overlay au clic sur "Voir la commande"
-        voirCommandeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-            const commandeId = this.getAttribute('data-id');
-            // TODO: Charger les données de la commande via AJAX
-            voirCommandeOverlay.style.display = 'flex';
-            });
-        });
-
-        // Fermer l'overlay au clic sur le bouton de fermeture
-        closeVoirCommande.addEventListener('click', function() {
-            voirCommandeOverlay.style.display = 'none';
-        });
-
-        // Fermer l'overlay au clic en dehors de la fenêtre
-        voirCommandeOverlay.addEventListener('click', function(e) {
-            if (e.target === voirCommandeOverlay) {
-            voirCommandeOverlay.style.display = 'none';
             }
         });
     </script>
