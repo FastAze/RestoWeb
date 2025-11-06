@@ -196,6 +196,28 @@
         // Afficher la fenêtre "Voir la commande"
         const voirCommandeOverlay = document.getElementById('voirCommandeOverlay');
         const closeVoirCommande = document.getElementById('closeVoirCommande');
+        const voirCommandeBtns = document.querySelectorAll('.voir-commande-btn');
+
+        // Ouvrir l'overlay au clic sur "Voir la commande"
+        voirCommandeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+            const commandeId = this.getAttribute('data-id');
+            // TODO: Charger les données de la commande via AJAX
+            voirCommandeOverlay.style.display = 'flex';
+            });
+        });
+
+        // Fermer l'overlay au clic sur le bouton de fermeture
+        closeVoirCommande.addEventListener('click', function() {
+            voirCommandeOverlay.style.display = 'none';
+        });
+
+        // Fermer l'overlay au clic en dehors de la fenêtre
+        voirCommandeOverlay.addEventListener('click', function(e) {
+            if (e.target === voirCommandeOverlay) {
+            voirCommandeOverlay.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
