@@ -21,8 +21,8 @@ git clone https://github.com/FastAze/restoweb.git
 # Se déplacer dans le dossier du projet
 cd restoweb
 
-# ⚠️ IMPORTANT : Basculer sur la dernière branche de développement (lot°3)
-git checkout lot°3
+# ⚠️ IMPORTANT : Basculer sur la dernière branche de développement (lot°5)
+git checkout lot°5
 ```
 
 > **💡 Astuce** : Utilisez toujours la branche avec le numéro de lot le plus élevé (ex: `lot°3`, `lot°4`, etc.) pour obtenir la version la plus récente du projet.
