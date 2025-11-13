@@ -210,7 +210,7 @@ restoweb/
 | `doc/mcd/` | Modèle Conceptuel de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mcd) |
 | `doc/mld/` | Modèle Logique de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mld) |
 | `doc/mpd/` | Modèle Physique de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mpd) |
-| `doc/dcu/` | Diagrammes de Cas d'Usage | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/dcu) |
+| `doc/dcu/` | Diagrammes de Cas d'Usage | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/DCU) |
 | `doc/ihm/` | Maquettes Interface Homme-Machine | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/ihm) |
 | `doc/activite/` | Diagrammes d'activité | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/activite) |
 | `doc/sitemap/` | Plan du site | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/sitemap) |
