@@ -189,29 +189,29 @@ restoweb/
 
 | Fichier | Description | Lien |
 |:--------|:------------|:----:|
-| `template/ini.php` | Connexion à la base de données MySQL | [📄](https://github.com/FastAze/restoweb/blob/main/template/ini.php) |
-| `template/path.php` | Gestion des chemins relatifs/absolus | [📄](https://github.com/FastAze/restoweb/blob/main/template/path.php) |
-| `template/chekEtat.php` | Fonctions de vérification des commandes | [📄](https://github.com/FastAze/restoweb/blob/main/template/chekEtat.php) |
+| `template/ini.php` | Connexion à la base de données MySQL | [📄](https://github.com/FastAze/restoweb/blob/lot4/template/ini.php) |
+| `template/path.php` | Gestion des chemins relatifs/absolus | [📄](https://github.com/FastAze/restoweb/blob/lot4/template/path.php) |
+| `template/chekEtat.php` | Fonctions de vérification des commandes | [📄](https://github.com/FastAze/restoweb/blob/lot4/template/chekEtat.php) |
 
 ### 🧩 Composants réutilisables
 
 | Composant | Utilisation | Lien |
 |:----------|:------------|:----:|
-| `componentArticle.php` | Affichage de la liste des produits | [📄](https://github.com/FastAze/restoweb/blob/main/component/componentArticle.php) |
-| `componentProfile.php` | Section profil utilisateur avec historique | [📄](https://github.com/FastAze/restoweb/blob/main/component/componentProfile.php) |
-| `componentVoirCommandeOverlay.php` | Modal de détail d'une commande | [📄](https://github.com/FastAze/restoweb/blob/main/component/componentVoirCommandeOverlay.php) |
+| `componentArticle.php` | Affichage de la liste des produits | [📄](https://github.com/FastAze/restoweb/blob/lot4/component/componentArticle.php) |
+| `componentProfile.php` | Section profil utilisateur avec historique | [📄](https://github.com/FastAze/restoweb/blob/lot4/component/componentProfile.php) |
+| `componentVoirCommandeOverlay.php` | Modal de détail d'une commande | [📄](https://github.com/FastAze/restoweb/blob/lot4/component/componentVoirCommandeOverlay.php) |
 
 ### 📚 Documentation technique
 
 | Dossier | Description | Lien |
 |:--------|:------------|:----:|
-| `doc/mcd/` | Modèle Conceptuel de Données | [📂](https://github.com/FastAze/restoweb/tree/main/doc/mcd) |
-| `doc/mld/` | Modèle Logique de Données | [📂](https://github.com/FastAze/restoweb/tree/main/doc/mld) |
-| `doc/mpd/` | Modèle Physique de Données | [📂](https://github.com/FastAze/restoweb/tree/main/doc/mpd) |
-| `doc/dcu/` | Diagrammes de Cas d'Usage | [📂](https://github.com/FastAze/restoweb/tree/main/doc/dcu) |
-| `doc/ihm/` | Maquettes Interface Homme-Machine | [📂](https://github.com/FastAze/restoweb/tree/main/doc/ihm) |
-| `doc/activite/` | Diagrammes d'activité | [📂](https://github.com/FastAze/restoweb/tree/main/doc/activite) |
-| `doc/sitemap/` | Plan du site | [📂](https://github.com/FastAze/restoweb/tree/main/doc/sitemap) |
+| `doc/mcd/` | Modèle Conceptuel de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mcd) |
+| `doc/mld/` | Modèle Logique de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mld) |
+| `doc/mpd/` | Modèle Physique de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mpd) |
+| `doc/dcu/` | Diagrammes de Cas d'Usage | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/dcu) |
+| `doc/ihm/` | Maquettes Interface Homme-Machine | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/ihm) |
+| `doc/activite/` | Diagrammes d'activité | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/activite) |
+| `doc/sitemap/` | Plan du site | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/sitemap) |
 
 ## 📊 Valeurs possibles
 
