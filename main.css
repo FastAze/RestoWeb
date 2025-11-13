@@ -184,6 +184,8 @@ nav a:hover::before {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
 }
 
 .article::before {
@@ -906,6 +908,10 @@ nav a:hover::before {
     animation: fadeIn 0.3s ease;
 }
 
+.voir-article-overlay.show {
+    display: flex;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1030,6 +1036,9 @@ nav a:hover::before {
 .retour-btn {
     background: var(--light-bg);
     color: var(--dark-color);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
 
 .retour-btn:hover {

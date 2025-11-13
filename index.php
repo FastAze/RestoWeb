@@ -27,7 +27,7 @@
             <?php
             // Inclusion du composant qui affiche tous les produits
             // Ce composant récupère les produits depuis la base de données
-            include "component/componentArticle.php";
+            include "component/componentArticleIndex.php";
             ?>
         </div>
     </section>
@@ -65,37 +65,5 @@
             </div>
         </section>
     </div>
-
-    <!-- Script JavaScript pour la gestion de la modal -->
-    <script>
-        // ===== GESTION DE L'AFFICHAGE DES DÉTAILS D'UN ARTICLE =====
-        // Ajout d'un événement de clic sur chaque article
-        document.querySelectorAll('.article').forEach(article => {
-            article.addEventListener('click', function() {
-                // Récupération de l'overlay (modal)
-                const overlay = document.getElementById('voirArticleOverlay');
-                
-                // Récupération des informations de l'article cliqué
-                const imgSrc = this.querySelector('img').src;           // URL de l'image
-                const nom = this.querySelector('h2').textContent;        // Nom du produit
-                const prix = this.querySelector('h3').textContent;       // Prix du produit
-
-                // Mise à jour du contenu de la modal
-                overlay.querySelector('.voir-article-img img').src = imgSrc;
-                overlay.querySelector('.voir-article-nom').textContent = nom;
-                overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
-                
-                // Affichage de la modal
-                overlay.style.display = 'flex';
-            });
-        });
-
-        // ===== FERMETURE DE LA MODAL =====
-        // Gestion du clic sur le bouton "Retour"
-        document.getElementById('closeVoirArticle').addEventListener('click', function() {
-            // Masquage de la modal
-            document.getElementById('voirArticleOverlay').style.display = 'none';
-        });
-    </script>
 </body>
 </html>

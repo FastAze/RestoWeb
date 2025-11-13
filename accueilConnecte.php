@@ -125,13 +125,29 @@
 
     // ===== GESTION DE LA DÉCONNEXION =====
     if (isset($_GET['logout'])) {
-        session_start();       // Démarrage de la session (si pas déjà fait)
         session_destroy();     // Destruction de toutes les variables de session
         header("Location: index.php");  // Redirection vers la page d'accueil publique
         exit();
     }
 
-    include "template/ini.php";
+    // Gestion de l'affichage de l'article choisi en PHP
+    $afficherArticle = isset($_GET['article']);
+    $produitChoisi = null;
+    
+    if ($afficherArticle) {
+        $dbh = db_connect();
+        $idProduit = (int)$_GET['article'];
+        
+        $sql = "SELECT idProduit, libProduit, prixProduitHT FROM produit WHERE idProduit = :idProduit";
+        try {
+            $sth = $dbh->prepare($sql);
+            $sth->bindParam(':idProduit', $idProduit, PDO::PARAM_INT);
+            $sth->execute();
+            $produitChoisi = $sth->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $ex) {
+            error_log("Erreur lors de la requête SQL : " . $ex->getMessage());
+        }
+    }
 
     // ===== RÉCUPÉRATION DU NOM D'UTILISATEUR =====
     $username = "Nom d'utilisateur";  // Valeur par défaut
@@ -177,7 +193,7 @@
             <!-- Bouton de déconnexion -->
             <a class="logout" href="?logout=1">Déconnexion</a>
             <!-- Bouton profil avec nom d'utilisateur -->
-            <a class="profile"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></a>
+            <a class="profile" href="profile.php"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'nom utilisateur' ?></a>
         </div>
     </nav>
 
@@ -198,95 +214,44 @@
         </div>
     </section>
 
-    <?php
-    // Inclusion du composant de profil utilisateur
-    include 'component/componentProfile.php';
-    include "template/ini.php";
-    
-    // ===== RÉCUPÉRATION DES PRODUITS POUR LA MODAL =====
-    $dbh = db_connect();
-    
-    // Requête pour récupérer tous les produits
-    $sql = "SELECT idProduit, libProduit, prixProduitHT FROM produit";
-    try {
-        $sth = $dbh->prepare($sql);
-        $sth->execute();
-        $produits = $sth->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $ex) {
-        die("Erreur lors de la requête SQL : " . $ex->getMessage());
-    }
+    <?php 
+    if ($afficherArticle && $produitChoisi) {
+        // Déterminer le chemin de l'image
+        $lib = $produitChoisi['libProduit'];
+        if (file_exists('image/' . $lib . '.png')) {
+            $imgWeb = 'image/' . $lib . '.png';
+        } else {
+            $imgWeb = 'image/pizza.jpg';
+        }
     ?>
-    
-    <!-- Modal de visualisation et ajout d'un article au panier -->
-    <div class="voir-article-overlay" id="voirArticleOverlay">
+    <div class="voir-article-overlay show" id="voirArticleOverlay">
         <section class="voir-article">
             <!-- Zone d'affichage de l'image du produit -->
             <div class="voir-article-img">
-                <img src="" alt="">
+                <img src="<?php echo htmlspecialchars($imgWeb); ?>" alt="<?php echo htmlspecialchars($produitChoisi['libProduit']); ?>">
             </div>
             
             <!-- Zone des détails et du formulaire d'ajout -->
             <div class="voir-article-details">
-                <!-- Nom du produit -->
-                <h2 class="voir-article-nom"></h2>
-                <!-- Prix du produit -->
-                <div class="voir-article-prix"></div>
-                
-                <!-- Formulaire d'ajout au panier -->
-                <form id="ajouterProduitForm" method="POST" class="voir-article-btns">
-                    <!-- Champ caché pour l'ID du produit -->
-                    <input type="hidden" name="idProduit" id="produitId">
-                    <!-- Champ de saisie de la quantité -->
-                    <input type="number" name="quantite" id="quantiteProduit" placeholder="1" min="1" value="1" required>
-                    <!-- Bouton de validation -->
+                <h2 class="voir-article-nom"><?php echo htmlspecialchars($produitChoisi['libProduit']); ?></h2>
+                <div class="voir-article-prix">Prix : <?php echo $produitChoisi['prixProduitHT']; ?>€</div>
+                <form method="POST" action="accueilConnecte.php" class="voir-article-btns">
+                    <input type="hidden" name="idProduit" value="<?php echo $produitChoisi['idProduit']; ?>">
+                    <input type="number" name="quantite" placeholder="1" min="1" value="1" required>
                     <button type="submit" class="valider-btn" name="valider">Valider</button>
-                    <!-- Bouton de retour -->
-                    <button type="button" id="closeVoirArticle" class="retour-btn">Retour</button>
+                    <a href="accueilConnecte.php" class="retour-btn">Retour</a>
                 </form>
             </div>
         </section>
     </div>
-
-    <?php
-    // Inclusion du composant modal de détail de commande
-    include 'component/componentVoirCommandeOverlay.php';
+    <?php 
+    }
     ?>
 
     <!-- Scripts JavaScript pour l'interactivité -->
     <script>
-        // ===== GESTION DE L'OUVERTURE DE LA MODAL PRODUIT =====
-        // Ajout d'un événement de clic sur chaque article
-        document.querySelectorAll('.article').forEach(article => {
-            article.addEventListener('click', function() {
-                // Récupération de l'overlay (modal)
-                const overlay = document.getElementById('voirArticleOverlay');
-                
-                // Récupération des informations de l'article cliqué
-                const imgSrc = this.querySelector('img').src;           // URL de l'image
-                const nom = this.querySelector('h2').textContent;        // Nom du produit
-                const prix = this.querySelector('h3').textContent;       // Prix du produit
-                const idProduit = this.getAttribute('data-id');          // ID du produit
-
-                // Mise à jour du contenu de la modal
-                overlay.querySelector('.voir-article-img img').src = imgSrc;
-                overlay.querySelector('.voir-article-nom').textContent = nom;
-                overlay.querySelector('.voir-article-prix').textContent = 'Prix : ' + prix;
-                overlay.querySelector('#produitId').value = idProduit;   // Stockage de l'ID pour le formulaire
-                
-                // Affichage de la modal
-                overlay.style.display = 'flex';
-            });
-        });
-
-        // ===== FERMETURE DE LA MODAL PRODUIT =====
-        document.getElementById('closeVoirArticle').addEventListener('click', function(e) {
-            e.preventDefault();  // Empêcher le comportement par défaut du bouton
-            document.getElementById('voirArticleOverlay').style.display = 'none';
-        });
-
-        // ===== GESTION DE L'AFFICHAGE DES NOTIFICATIONS =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Récupération des éléments de notification
+            // Gestion des notifications
             const notifSection = document.querySelector('.notification');
             const notifIcon = document.querySelector('.pannier-notif a img');
             
@@ -303,126 +268,6 @@
                     if (notifSection) {
                         // Alterner entre affichage et masquage
                         notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
-                    }
-                });
-            }
-
-            // ===== FONCTIONS D'AFFICHAGE DES DIFFÉRENTES SECTIONS =====
-            /**
-             * Fonction utilitaire pour afficher une section et masquer les autres
-             * @param {string} sectionAfficher - ID ou classe de la section à afficher
-             * @param {Array} sectionsACacher - Tableau des sections à masquer
-             */
-            function afficherSection(sectionAfficher, sectionsACacher) {
-                // Affichage de la section demandée
-                const sectionAAfficher = document.getElementById(sectionAfficher) || document.querySelector('.' + sectionAfficher);
-                if (sectionAAfficher) {
-                    sectionAAfficher.style.display = 'block';
-                }
-                
-                // Masquage de toutes les autres sections
-                sectionsACacher.forEach(function(sectionId) {
-                    const section = document.getElementById(sectionId) || document.querySelector('.' + sectionId);
-                    if (section) {
-                        section.style.display = 'none';
-                    }
-                });
-            }
-
-            // Fonction pour afficher la section paiement
-            function afficherPaiement() {
-                afficherSection('sectionPaiement', ['sectionPanier', 'sectionArticle', 'sectionProfile']);
-            }
-
-            // Fonction pour afficher la section panier
-            function afficherPanier() {
-                afficherSection('sectionPanier', ['sectionArticle', 'sectionPaiement', 'sectionProfile']);
-            }
-
-            // Fonction pour afficher la section articles
-            function afficherArticles() {
-                afficherSection('sectionArticle', ['sectionPanier', 'sectionPaiement', 'sectionProfile']);
-            }
-
-            // Fonction pour afficher le profil utilisateur
-            function afficherProfile() {
-                afficherSection('sectionProfile', ['sectionPanier', 'sectionPaiement', 'sectionArticle']);
-            }
-
-            // ===== GESTION DES BOUTONS DE NAVIGATION =====
-            
-            // Bouton de validation du paiement
-            const boutonValiderPaiement = document.querySelector('.bouton-valider-paiement');
-            if (boutonValiderPaiement) {
-                boutonValiderPaiement.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherArticles();
-                });
-            }
-
-            // Bouton d'annulation du paiement
-            const boutonAnnulerPaiement = document.querySelector('.bouton-annuler');
-            if (boutonAnnulerPaiement) {
-                boutonAnnulerPaiement.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherArticles();
-                });
-            }
-
-            // Bouton de retour depuis le panier
-            const boutonRetourPanier = document.querySelector('.bouton-retour');
-            if (boutonRetourPanier) {
-                boutonRetourPanier.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherArticles();
-                });
-            }
-
-            // Clic sur le logo pour retourner aux articles
-            const logoLien = document.querySelector('.logo a');
-            if (logoLien) {
-                logoLien.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherArticles();
-                });
-            }
-
-            // Clic sur le lien profil
-            const lienProfile = document.querySelector('.profile');
-            if (lienProfile) {
-                lienProfile.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    afficherProfile();
-                });
-            }
-
-            // ===== GESTION DE LA MODAL DE DÉTAIL DE COMMANDE =====
-            const voirCommandeOverlay = document.getElementById('voirCommandeOverlay');
-            const closeVoirCommande = document.getElementById('closeVoirCommande');
-            const voirCommandeBtns = document.querySelectorAll('.voir-commande-btn');
-            
-            // Ouverture de la modal au clic sur "Voir la commande"
-            voirCommandeBtns.forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (voirCommandeOverlay) {
-                        voirCommandeOverlay.classList.add('active');
-                    }
-                });
-            });
-            
-            // Fermeture de la modal avec le bouton X
-            if (closeVoirCommande && voirCommandeOverlay) {
-                closeVoirCommande.addEventListener('click', function() {
-                    voirCommandeOverlay.classList.remove('active');
-                });
-            }
-
-            // Fermeture de la modal en cliquant sur le fond sombre
-            if (voirCommandeOverlay) {
-                voirCommandeOverlay.addEventListener('click', function(e) {
-                    if (e.target === voirCommandeOverlay) {
-                        voirCommandeOverlay.classList.remove('active');
                     }
                 });
             }
