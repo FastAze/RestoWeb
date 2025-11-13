@@ -21,11 +21,11 @@ git clone https://github.com/FastAze/restoweb.git
 # Se déplacer dans le dossier du projet
 cd restoweb
 
-# ⚠️ IMPORTANT : Basculer sur la dernière branche de développement (lot°5)
-git checkout lot°5
+# ⚠️ IMPORTANT : Basculer sur la dernière branche de développement (lot5)
+git checkout lot5
 ```
 
-> **💡 Astuce** : Utilisez toujours la branche avec le numéro de lot le plus élevé (ex: `lot°3`, `lot°4`, etc.) pour obtenir la version la plus récente du projet.
+> **💡 Astuce** : Utilisez toujours la branche avec le numéro de lot le plus élevé (ex: `lot3`, `lot4`, etc.) pour obtenir la version la plus récente du projet.
 
 ### 2. Configuration de la base de données
 
@@ -112,8 +112,10 @@ Ce projet utilise plusieurs branches pour organiser le développement :
 
 | Branche | Description | Statut |
 |:-------:|:-----------:|:------:|
-| `main`  | Branche principale stable | ✅ Stable |
-| `lot°3` | Développement du lot 3 (🔥 À utiliser) | 🚧 En cours |
+| `lot2`  | Développement du lot 2 | ✅ Stable |
+| `lot3` | Développement du lot 3 | ✅ Complété |
+| `lot4` | Branche principale stable | ✅ Complété |
+| `lot5` | Développement du lot 5 (🔥 À utiliser) | 🚧 En cours |
 
 > **⚠️ Important** : Pour le développement ou l'utilisation de la dernière version, utilisez toujours la branche avec le numéro de lot le plus élevé.
 
@@ -126,8 +128,8 @@ git branch -a
 # Changer vers la branche principale
 git checkout main
 
-# Changer vers la branche de développement lot°3 (recommandé)
-git checkout lot°3
+# Changer vers la branche de développement lot3 (recommandé)
+git checkout lot3
 
 # Créer une nouvelle branche basée sur une branche existante
 git checkout -b nouvelle-branche branche-existante
@@ -370,20 +372,11 @@ restoweb/
 
 2. **Consulter l'historique**
    - Visualisez toutes vos commandes passées
-   - Informations affichées :
-     - ID de la commande
-     - Prix TTC
-     - Bouton "Voir la commande"
-
-3. **Détails d'une commande**
-   - Cliquez sur **"Voir la commande"**
-   - Une fenêtre modale affiche :
      - N° de commande
      - Date et heure
-     - Statut de la commande
      - Type (sur place/à emporter)
-     - Liste des articles avec quantités
-     - Détail des prix (HT, TVA, TTC)
+     - Prix (TTC)
+     - Statut de la commande
 
 ---
 
