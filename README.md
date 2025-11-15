@@ -350,20 +350,7 @@ restoweb/
 - Fonctionnalité en cours de développement
 - L'envoi d'e-mails sera ajouté prochainement
 
-### Débogage
-
-Activer les logs d'erreurs PHP :
-```php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-```
-
-Activer les logs PDO :
-```php
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-```
-
-## 📞 Contact
+## ℹ️ Informations du projet
 
 - **Projet** : RestoWeb - AP.SLAM BTS SIO 2ème année
 - **Institut** : LIMAYRAC
