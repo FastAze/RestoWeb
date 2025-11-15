@@ -6,10 +6,12 @@ Application web de commande en ligne pour restaurant développée en PHP/MySQL d
 
 ### Diagrammes et modèles de données
 
-- **Diagramme des cas d'utilisation** : `doc/DCU/`
-- **Modèle Conceptuel des Données (MCD)** : `doc/mcd/`
-- **Modèle Logique des Données (MLD)** : `doc/mld/mld.txt`
-- **Modèle Physique des Données (MPD)** : `doc/mpd/restoweb.sql`
+| Dossier | Description | Lien |
+|:--------|:------------|:----:|
+| `doc/DCU/` | Diagramme des Cas d'Utilisation | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/DCU) |
+| `doc/mcd/` | Modèle Conceptuel de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mcd) |
+| `doc/mld/` | Modèle Logique de Données | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mld) |
+| `doc/mpd/` | Modèle Physique de Données (SQL) | [📂](https://github.com/FastAze/restoweb/tree/lot4/doc/mpd) |
 
 ### Valeurs possibles
 
