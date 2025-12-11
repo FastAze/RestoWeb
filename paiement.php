@@ -57,8 +57,8 @@
                 $dbh = db_connect();
                 $user_id = $_SESSION['user_id'];
                 
-                // Mise à jour de l'état de la commande (1 = initialisée -> 2 = finalisée)
-                $updateSql = "UPDATE commande SET idEtat = 2 WHERE idUtilisateur = :user_id AND idEtat = 1";
+                // Mise à jour de l'état de la commande (1 = initialisée -> 4 = En attente)
+                $updateSql = "UPDATE commande SET idEtat = 4 WHERE idUtilisateur = :user_id AND idEtat = 1";
                 $updateSth = $dbh->prepare($updateSql);
                 $updateSth->execute([':user_id' => $user_id]);
                 
