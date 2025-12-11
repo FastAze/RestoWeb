@@ -1,9 +1,6 @@
 <?php
 require_once "../template/ini.php";
-
-// Connexion à la base de données
-$connexion = new PDO('mysql:host=localhost;dbname=restoweb;charset=utf8', 'root', '');
-$connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$dbh = db_connect();
 
 // Requête SQL directe pour récupérer les commandes en attente
 $sql = "SELECT c.idCommande, c.dateHeureCom, c.totalTTC, c.typeCom, c.idEtat, c.idUtilisateur, 
@@ -15,7 +12,7 @@ $sql = "SELECT c.idCommande, c.dateHeureCom, c.totalTTC, c.typeCom, c.idEtat, c.
     OR c.idEtat = 6
     ORDER BY c.dateHeureCom ASC";
 
-$stmt = $connexion->prepare($sql);
+$stmt = $dbh->prepare($sql);
 $stmt->execute();
 $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
