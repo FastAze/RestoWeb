@@ -19,8 +19,8 @@ if ($idCommande > 0) {
         $pdo = new PDO('mysql:host=localhost;dbname=restoweb;charset=utf8', 'root', '');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Requête pour passer la commande à l'état "en préparation"
-        $sql = "UPDATE commande SET idEtat = 6 WHERE idCommande = :idCommande";
+        // Requête pour passer la commande à l'état "refuser"
+        $sql = "UPDATE commande SET idEtat = 5 WHERE idCommande = :idCommande";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':idCommande', $idCommande, PDO::PARAM_INT);
         $stmt->execute();
@@ -43,5 +43,5 @@ echo $json;
 
 /*
 URL de test :
-http://localhost/www/api/commande_accepter.php?id_commande=XX
+http://localhost/www/api/commande_refuser.php?id_commande=XX
 */

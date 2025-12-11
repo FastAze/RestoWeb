@@ -20,11 +20,11 @@ $stmt->execute();
 $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Envoi du contenu au format JSON
-$json = json_encode($les_commandes, JSON_PRETTY_PRINT);
+$json = json_encode($les_commandes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 header("Content-type: application/json; charset=utf-8");
 echo $json;
 
 /*
 URL de test :
-http://localhost/www/api/commandes_en_attente.php
+http://localhost/www/api/liste_commandes.php
 */
