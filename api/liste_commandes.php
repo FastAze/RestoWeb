@@ -11,7 +11,8 @@ $sql = "SELECT c.idCommande, c.dateHeureCom, c.totalTTC, c.typeCom, c.idEtat, c.
     FROM commande c
     INNER JOIN etat e ON c.idEtat = e.idEtat
     INNER JOIN utilisateur u ON c.idUtilisateur = u.idUtilisateur
-    WHERE c.idEtat = 4
+    WHERE c.idEtat = 4 
+    OR c.idEtat = 6
     ORDER BY c.dateHeureCom ASC";
 
 $stmt = $connexion->prepare($sql);
@@ -22,3 +23,8 @@ $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $json = json_encode($les_commandes, JSON_PRETTY_PRINT);
 header("Content-type: application/json; charset=utf-8");
 echo $json;
+
+/*
+URL de test :
+http://localhost/www/api/commandes_en_attente.php
+*/
