@@ -273,7 +273,7 @@
             
             // Masquer la notification au chargement de la page
             if (notifSection) {
-                notifSection.style.display = 'none';
+                notifSection.style.display = <?php echo !empty($notification) ? "'flex'" : "'none'"; ?>;
             }
             
             // Toggle de l'affichage des notifications au clic sur l'icône
@@ -285,6 +285,7 @@
                         // Alterner entre affichage et masquage
                         notifSection.style.display = (notifSection.style.display === 'none' || notifSection.style.display === '') ? 'flex' : 'none';
                     }
+                    
                 });
             }
         });
