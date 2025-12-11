@@ -198,9 +198,25 @@
     </nav>
 
     <!-- Section de notification (masquée par défaut) -->
+    <?php
+            $notification = "";
+            if (isset($_SESSION['user_id'])) {
+                $sqlnotification = "SELECT idEtat FROM commande WHERE idUtilisateur = :idUtilisateur AND idEtat = 4";
+                $sthnotification = $dbh->prepare($sqlnotification);
+                $sthnotification->bindParam(':idUtilisateur', $_SESSION['user_id']);
+                $sthnotification->execute();
+                $fetchnotification = $sthnotification->fetch(PDO::FETCH_ASSOC);
+                $notification = isset($fetchnotification) ? $fetchnotification : "";
+            }
+    ?>
+
     <section class="notification">
         <div class="notification-boite">
-            <p>Votre commande est en cours de route!</p>
+        <?php 
+            if (!empty($notification)) {
+                echo "<p>Vous avez une ou plusieurs commandes en attente.</p>";
+            }
+        ?>
         </div>
     </section>
 
