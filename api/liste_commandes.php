@@ -3,14 +3,16 @@ require_once "../template/ini.php";
 $dbh = db_connect();
 
 // Requête SQL directe pour récupérer les commandes en attente
-$sql = "SELECT c.idCommande, c.dateHeureCom, c.totalTTC, c.typeCom, c.idEtat, c.idUtilisateur, 
-         e.libEtat, u.loginUtil, u.emailUtil
-    FROM commande c
-    INNER JOIN etat e ON c.idEtat = e.idEtat
-    INNER JOIN utilisateur u ON c.idUtilisateur = u.idUtilisateur
-    WHERE c.idEtat = 4 
-    OR c.idEtat = 6
-    ORDER BY c.dateHeureCom ASC";
+$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC 
+    FROM commande C,  etat E, lignedecommande L
+    -- produit P, utilisateur U,
+    WHERE E.idEtat=C.idEtat 
+    -- AND L.idProduit=P.idProduit
+    -- AND C.idUtilisateur=U.idUtilisateur
+    AND C.idCommande=L.idCommande
+    AND (C.idEtat = 4 OR C.idEtat = 6)
+    GROUP BY C.idCommande
+    ORDER BY C.dateHeureCom ASC;";
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
