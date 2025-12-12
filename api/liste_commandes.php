@@ -4,10 +4,7 @@ $dbh = db_connect();
 
 $sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC 
     FROM commande C,  etat E, lignedecommande L
-    -- produit P, utilisateur U,
     WHERE E.idEtat=C.idEtat 
-    -- AND L.idProduit=P.idProduit
-    -- AND C.idUtilisateur=U.idUtilisateur
     AND C.idCommande=L.idCommande
     AND (C.idEtat = 4 OR C.idEtat = 6)
     GROUP BY C.idCommande
