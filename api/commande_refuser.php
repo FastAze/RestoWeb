@@ -6,7 +6,7 @@ $dbh = db_connect();
 $idCommande = isset($_GET['id_commande']) ? $_GET['id_commande'] : 0;
 
 if ($idCommande > 0) {        
-    // Requête pour passer la commande à l'état "refuser"
+    // Requête pour passer la commande à l'état "abandonnée"
     $sql = "UPDATE commande SET idEtat = 5 WHERE idCommande = :idCommande";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':idCommande', $idCommande, PDO::PARAM_INT);
