@@ -2,7 +2,6 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-// Requête SQL directe pour récupérer les commandes en attente
 $sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC 
     FROM commande C,  etat E, lignedecommande L
     -- produit P, utilisateur U,
