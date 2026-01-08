@@ -5,7 +5,7 @@ $dbh = db_connect();
 // Récupérer l'ID de la commande depuis l'URL
 $idCommande = isset($_GET['idCommande']) ? $_GET['idCommande'] : 0;
 
-$sql = "SELECT C.idCommande, C.dateHeureCom, U.loginUtil, L.idProduit, P.libProduit, L.quantite 
+$sql = "SELECT L.idProduit, P.libProduit, L.quantite, C.idCommande, C.dateHeureCom, U.loginUtil
     FROM commande C, lignedecommande L, produit P, utilisateur U
     WHERE L.idProduit=P.idProduit
     AND C.idUtilisateur=U.idUtilisateur
