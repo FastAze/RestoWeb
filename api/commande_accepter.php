@@ -2,7 +2,7 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-$idCommande = isset($_GET['id_commande']) ? $_GET['id_commande'] : 0;
+$idCommande = isset($_GET['idCommande']) ? $_GET['idCommande'] : 0;
 
 if ($idCommande > 0) { 
     // Requête pour passer la commande à l'état "en préparation"
