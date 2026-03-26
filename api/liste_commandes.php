@@ -2,7 +2,7 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC, U.loginUtil
+$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*) as nbProduits, C.totalTTC, U.loginUtil
     FROM commande C,  etat E, lignedecommande L, utilisateur U
     WHERE E.idEtat=C.idEtat
     AND C.idUtilisateur=U.idUtilisateur
@@ -15,21 +15,19 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Pour chaque commande, récupérer les détails des produits
 foreach ($les_commandes as $cle => $commande) {
-    $sqlDetails = "SELECT L.idProduit, P.libProduit, L.quantite
+    $sqlLigne = "SELECT L.idProduit, P.libProduit, L.quantite
         FROM lignedecommande L, produit P
         WHERE L.idProduit = P.idProduit
         AND L.idCommande = :idCommande
         ORDER BY L.idProduit ASC;";
 
-    $stmtDetails = $dbh->prepare($sqlDetails);
-    $stmtDetails->bindParam(':idCommande', $commande['idCommande'], PDO::PARAM_INT);
-    $stmtDetails->execute();
-    $les_commandes[$cle]['details'] = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
+    $stmtLigne = $dbh->prepare($sqlLigne);
+    $stmtLigne->bindParam(':idCommande', $commande['idCommande'], PDO::PARAM_INT);
+    $stmtLigne->execute();
+    $les_commandes[$cle]['ligne'] = $stmtLigne->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Envoi du contenu au format JSON
 $json = json_encode($les_commandes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 header("Content-type: application/json; charset=utf-8");
 echo $json;
