@@ -2,9 +2,9 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC 
+$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*) as nbProduits, C.totalTTC
     FROM commande C,  etat E, lignedecommande L
-    WHERE E.idEtat=C.idEtat 
+    WHERE E.idEtat=C.idEtat
     AND C.idCommande=L.idCommande
     AND (C.idEtat = 4 OR C.idEtat = 6)
     GROUP BY C.idCommande
@@ -13,6 +13,20 @@ $sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Pour chaque commande, récupérer les détails des produits
+foreach ($les_commandes as $cle => $commande) {
+    $sqlDetails = "SELECT L.idProduit, P.libProduit, L.quantite
+        FROM lignedecommande L, produit P
+        WHERE L.idProduit = P.idProduit
+        AND L.idCommande = :idCommande
+        ORDER BY L.idProduit ASC;";
+
+    $stmtDetails = $dbh->prepare($sqlDetails);
+    $stmtDetails->bindParam(':idCommande', $commande['idCommande'], PDO::PARAM_INT);
+    $stmtDetails->execute();
+    $les_commandes[$cle]['details'] = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Envoi du contenu au format JSON
 $json = json_encode($les_commandes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
