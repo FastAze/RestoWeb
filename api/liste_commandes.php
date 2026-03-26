@@ -2,9 +2,10 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*) as nbProduits, C.totalTTC
-    FROM commande C,  etat E, lignedecommande L
+$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC, U.loginUtil
+    FROM commande C,  etat E, lignedecommande L, utilisateur U
     WHERE E.idEtat=C.idEtat
+    AND C.idUtilisateur=U.idUtilisateur
     AND C.idCommande=L.idCommande
     AND (C.idEtat = 4 OR C.idEtat = 6)
     GROUP BY C.idCommande
