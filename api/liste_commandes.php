@@ -2,9 +2,10 @@
 require_once "../template/ini.php";
 $dbh = db_connect();
 
-$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*), C.totalTTC 
-    FROM commande C,  etat E, lignedecommande L
-    WHERE E.idEtat=C.idEtat 
+$sql = "SELECT C.idCommande, C.dateHeureCom, E.libEtat, COUNT(*) as nbProduits, C.totalTTC, U.loginUtil
+    FROM commande C,  etat E, lignedecommande L, utilisateur U
+    WHERE E.idEtat=C.idEtat
+    AND C.idUtilisateur=U.idUtilisateur
     AND C.idCommande=L.idCommande
     AND (C.idEtat = 4 OR C.idEtat = 6)
     GROUP BY C.idCommande
@@ -14,7 +15,19 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $les_commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Envoi du contenu au format JSON
+foreach ($les_commandes as $cle => $commande) {
+    $sqlLigne = "SELECT L.idProduit, P.libProduit, L.quantite
+        FROM lignedecommande L, produit P
+        WHERE L.idProduit = P.idProduit
+        AND L.idCommande = :idCommande
+        ORDER BY L.idProduit ASC;";
+
+    $stmtLigne = $dbh->prepare($sqlLigne);
+    $stmtLigne->bindParam(':idCommande', $commande['idCommande'], PDO::PARAM_INT);
+    $stmtLigne->execute();
+    $les_commandes[$cle]['ligne'] = $stmtLigne->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $json = json_encode($les_commandes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 header("Content-type: application/json; charset=utf-8");
 echo $json;
