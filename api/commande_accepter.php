@@ -24,5 +24,5 @@ echo $json;
 
 /*
 URL de test :
-http://localhost/www/api/commande_accepter.php?id_commande=XX
+http://localhost/www/api/commande_accepter.php?idCommande=XX
 */
