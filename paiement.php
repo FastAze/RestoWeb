@@ -129,34 +129,6 @@
             error_log("Erreur lors de la récupération de la commande : " . $ex->getMessage());
         }
     }
-
-    // ===== GESTION DE LA VALIDATION DU PAIEMENT (code alternatif) =====
-    if (isset($_POST['action']) && $_POST['action'] === 'valider_paiement') {
-        try {
-            // Récupération des informations de la commande avant de la finaliser
-            $sqlCommande = "SELECT totalTTC FROM commande WHERE idUtilisateur = :utilisateur AND idEtat = 1";
-            $sthCommande = $dbh->prepare($sqlCommande);
-            $sthCommande->execute([':utilisateur' => $user_id]);
-            $commande = $sthCommande->fetch(PDO::FETCH_ASSOC);
-            
-            // Mise à jour de l'état de la commande à "finalisée"
-            $sql = "UPDATE commande 
-                    SET idEtat = 2 
-                    WHERE idUtilisateur = :user 
-                    AND idEtat = 1";
-            
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute([':user' => $user_id]);
-            
-            // Message de succès et redirection
-            $_SESSION['message_succes'] = 'paiement_valide';
-            header('Location: accueilConnecte.php');
-            exit();
-        } catch (PDOException $e) {
-            // Log de l'erreur
-            error_log("Erreur lors de la mise à jour de l'état: " . $e->getMessage());
-        }
-    }
     ?>
 
     <!-- Section principale du paiement -->
